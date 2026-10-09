@@ -1,4 +1,4 @@
-# sumber parameter dari Johnson dkk. (1989), Operations Research 37(6), Ben-Ameur (2004), dan COAP 29(3)
+# sumber parameter dari Johnson dkk. (1989), Operations Research 37(6), dan Ben-Ameur (2004), COAP 29(3)
 import math
 import random
 import time
