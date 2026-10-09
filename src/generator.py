@@ -1,5 +1,6 @@
 from models import State, Truck, Package, AXIS
 from validator import is_valid
+from neighbor import drop_z
 from typing import List
 import random
 
@@ -25,13 +26,17 @@ def generate(truck : Truck, packages : List[Package], limit : int = 100) :
                     # Posisikan paket secara random
                     max_x = truck.width - w
                     max_y = truck.length - l
-                    max_z = truck.height - h
                     
                     x = random.randint(0, max_x)
                     y = random.randint(0, max_y)
-                    z = 0   # pastikan paket ditempatkan di lantai terlebih dahulu
+                    z = drop_z(State(truck, packages_copy), i, x, y, w, l)
 
-                    p.position = (x, y, z)
+                    # Pastikan tidak melebihi tinggi truk
+                    if(z + h < truck.height) :
+                        p.position = (x, y, z)
+
+                    else : 
+                        p.position = None
 
                 else : # Ukuran paket sudah tidak muat, ditaro di luar
                     p.position = None

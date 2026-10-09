@@ -10,6 +10,6 @@ def load_data_from_json(file_path : str) :
     truck = Truck(**data["Truck"])
     packages = [Package(**p) for p in data["Package"]]
 
-    state = State(truck=truck, package=packages)
+    state = State(truck=truck, packages=packages)
 
     return state
