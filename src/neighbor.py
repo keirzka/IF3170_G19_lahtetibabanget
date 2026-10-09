@@ -1,3 +1,4 @@
+# sumber heuristik drop_z dari Baker dkk. (1980) dan Karabulut & Inceoglu (2004)
 import copy
 import random
 from models import State, AXIS
