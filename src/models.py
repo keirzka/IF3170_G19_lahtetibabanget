@@ -65,10 +65,6 @@ class State :
     truck : Truck
     packages : List[Package] 
 
-    def __init__(self, truck : Truck, package : Package) : 
-        self.truck = truck
-        self.packages = package
-
     @property
     def total_value(self):
         return sum(pack.value for pack in self.packages if pack.is_placed)
