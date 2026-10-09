@@ -1,0 +1,40 @@
+{
+  "Truck": {
+    "width": 10,
+    "length": 10,
+    "height": 10,
+    "max_capacity": 60
+  },
+  "Package": [
+    {
+      "id": "HeavyBox1",
+      "width": 4,
+      "length": 4,
+      "height": 4,
+      "value": 100,
+      "weight": 50,
+      "is_fragile": false,
+      "eta": 1
+    },
+    {
+      "id": "HeavyBox2",
+      "width": 4,
+      "length": 4,
+      "height": 4,
+      "value": 120,
+      "weight": 50,
+      "is_fragile": false,
+      "eta": 2
+    },
+    {
+      "id": "LightBox3",
+      "width": 2,
+      "length": 2,
+      "height": 2,
+      "value": 80,
+      "weight": 10,
+      "is_fragile": false,
+      "eta": 1
+    }
+  ]
+}
