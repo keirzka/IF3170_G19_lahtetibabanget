@@ -8,7 +8,6 @@
 #   plot_experiment_summary(records)    -> perbandingan nilai akhir dan durasi antar konfigurasi GA
 
 # Pemakaian CLI:
-#   python visualization.py demo                         # contoh dengan data buatan
 #   python visualization.py run output/ga/<run>.json     # visualisasi satu run hasil experiment_ga.py
 #   python visualization.py summary output/ga            # ringkasan seluruh run di satu folder
 
@@ -223,76 +222,3 @@ def plot_experiment_summary(records, save_path=None, title="Hasil eksperimen Gen
     fig.suptitle(title, color=BROWN, fontsize=12)
     fig.tight_layout(rect=[0, 0, 1, 0.96])
     return _finish(fig, save_path, show)
-
-# Demo
-def demo(out_dir, show=False):
-    import random
-    from gen_dataset import build
-    from generator import generate
-    from genetic_algorithm import genetic_algorithm
-    from models import Package, Truck
-
-    data = build(30, 2026)
-    truck = Truck(**data["Truck"])
-    packages = [Package(**p) for p in data["Package"]]
-
-    random.seed(3)
-    out = []
-    out.append(draw_state(generate(truck, packages), "Demo - state dari generator",
-                          os.path.join(out_dir, "demo_state.png"), show=show))
-
-    _, dur, init_s, best_s, _, hist = genetic_algorithm(truck, packages, 30, 40, seed=3)
-    out.append(draw_state(init_s, "Demo GA - state awal", os.path.join(out_dir, "demo_ga_awal.png"), show=show))
-    out.append(draw_state(best_s, "Demo GA - state akhir", os.path.join(out_dir, "demo_ga_akhir.png"), show=show))
-    out.append(plot_history(hist, f"Demo GA (populasi 30, 40 generasi, {dur:.2f} s)",
-                            os.path.join(out_dir, "demo_ga_history.png"), xlabel="Generasi", show=show))
-
-    mock, v = [], 0
-    for _ in range(60):
-        v += random.choice([0, 0, 0, 40, 70, 120])
-        mock.append(v)
-    out.append(plot_history(mock, "[DATA TIRUAN] contoh history hill-climbing (list angka)",
-                            os.path.join(out_dir, "demo_hc_history.png"), show=show))
-
-    records = []
-    for group, configs in (("iterasi", [(20, 10), (20, 20), (20, 40)]),
-                           ("populasi", [(10, 20), (20, 20), (40, 20)])):
-        for pop, gens in configs:
-            for run in range(3):
-                _, d, _, _, bv, _ = genetic_algorithm(truck, packages, pop, gens, seed=100 + run)
-                records.append({"group": group, "population_size": pop, "generations": gens,
-                                "final_value": bv, "duration": d})
-    out.append(plot_experiment_summary(records, os.path.join(out_dir, "demo_ringkasan.png"),
-                                       title="[DEMO KECIL] Ringkasan eksperimen GA", show=show))
-    return out
-
-
-def main():
-    ap = argparse.ArgumentParser(description="Visualisasi Tubes 1 IF3170")
-    sub = ap.add_subparsers(dest="cmd", required=True)
-    p_run = sub.add_parser("run", help="visualisasi satu record JSON")
-    p_run.add_argument("record")
-    p_sum = sub.add_parser("summary", help="ringkasan semua record JSON dalam satu folder")
-    p_sum.add_argument("directory")
-    p_demo = sub.add_parser("demo", help="contoh dengan data tiruan dan GA kecil")
-    for p in (p_run, p_sum, p_demo):
-        p.add_argument("--out", default=DEFAULT_OUT)
-        p.add_argument("--show", action="store_true", help="tampilkan jendela (default: simpan PNG saja)")
-    args = ap.parse_args()
-
-    if not args.show:
-        plt.switch_backend("Agg")
-
-    if args.cmd == "run":
-        paths = visualize_run(args.record, args.out, args.show)
-    elif args.cmd == "summary":
-        paths = [plot_experiment_summary(load_records(args.directory),
-                                         os.path.join(args.out, "ringkasan_ga.png"), show=args.show)]
-    else:
-        paths = demo(args.out, args.show)
-    for p in paths:
-        print(p)
-
-
-if __name__ == "__main__":
-    main()
