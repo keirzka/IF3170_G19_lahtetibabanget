@@ -5,10 +5,10 @@ from typing import List
 import random
 
 def generate(truck : Truck, packages : List[Package], limit : int = 100) : 
-    for i in range(limit) :
+    for _ in range(limit) :
         packages_copy = [p.copy() for p in packages]
 
-        for p in packages_copy : 
+        for i, p in enumerate(packages_copy) : 
             # Random paket yg masuk dan di luar
             package_inside = random.choice([True, False])
 
