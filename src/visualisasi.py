@@ -1,15 +1,6 @@
-
-# Fungsi utama:
-#   draw_state(state, ...)              -> truk 3D + paket di dalam, panel paket di luar, value state
-#   plot_history(history, ...)          -> nilai objective terhadap iterasi
-#                                          history = list angka        -> satu garis (HC / SA)
-#                                          history = list (best, avg)  -> dua garis (GA)
-#   visualize_run(record_json, ...)     -> state awal, state akhir, dan plot history satu run
-#   plot_experiment_summary(records)    -> perbandingan nilai akhir dan durasi antar konfigurasi GA
-
 # Pemakaian CLI:
-#   python visualization.py run output/ga/<run>.json     # visualisasi satu run hasil experiment_ga.py
-#   python visualization.py summary output/ga            # ringkasan seluruh run di satu folder
+#   python visualisasi.py run output/ga/<run>.json     # visualisasi satu run hasil experiment_ga.py
+#   python visualisasi.py summary output/ga            # ringkasan seluruh run di satu folder
 
 # Koordinat: x = lebar, y = panjang, z = tinggi
 
@@ -24,7 +15,7 @@ from matplotlib.cm import ScalarMappable
 from matplotlib.colors import LinearSegmentedColormap, Normalize
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-from state_serializer import state_from_dict
+from io_handler import state_from_json
 
 # palet 
 ORANGE = "#E85D04"
@@ -166,9 +157,9 @@ def visualize_run(record_path, out_dir=DEFAULT_OUT, show=False):
     is_ga = "population_size" in rec
 
     paths = [
-        draw_state(state_from_dict(rec["initial_state"]), f"{name} - state awal",
+        draw_state(state_from_json(rec["initial_state"]), f"{name} - state awal",
                    os.path.join(out_dir, f"{name}_awal.png"), show=show),
-        draw_state(state_from_dict(rec["final_state"]), f"{name} - state akhir",
+        draw_state(state_from_json(rec["final_state"]), f"{name} - state akhir",
                    os.path.join(out_dir, f"{name}_akhir.png"), show=show),
         plot_history(rec["history"], f"{name}\n{' | '.join(info)}",
                      os.path.join(out_dir, f"{name}_history.png"),
