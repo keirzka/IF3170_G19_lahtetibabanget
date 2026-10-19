@@ -9,6 +9,7 @@ import glob
 import json
 import os
 
+import math
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
@@ -67,29 +68,38 @@ def draw_state(state, title="State", save_path=None, labels=True, show=False):
                                          edgecolors=GRAY, linewidths=1.4, zorder=1))
 
     vmax = max([p.value for p in state.packages] + [1])
-    norm = Normalize(0, vmax)
-    # semua sisi balok dikumpulkan dalam satu grup agar diurutkan per sisi 
-    faces, face_colors, edge_colors, widths, styles = [], [], [], [], []
-    for p in state.placed_packages:
+    norm = Normalize(0, vmax) 
+    
+    elev_rad = math.radians(28)
+    azim_rad = math.radians(-55)
+    cam_x = math.cos(elev_rad) * math.cos(azim_rad)
+    cam_y = math.cos(elev_rad) * math.sin(azim_rad)
+    cam_z = math.sin(elev_rad)
+
+    def get_depth(p):
+        dx, dy, dz = p.dimension
+        cx, cy, cz = p.position[0] + dx / 2, p.position[1] + dy / 2, p.position[2] + dz / 2
+        return cx * cam_x + cy * cam_y + cz * cam_z
+
+    sorted_packages = sorted(state.placed_packages, key=get_depth)
+
+    current_zorder = 2
+    for p in sorted_packages:
         x, y, z = p.position
         dx, dy, dz = p.dimension
         box = _box_faces(x, y, z, dx, dy, dz)
-        faces += box
-        face_colors += [CMAP(norm(p.value))] * len(box)
-        edge_colors += [BLACK] * len(box)
-        widths += [0.8] * len(box)
-        styles += ["--" if p.is_fragile else "-"] * len(box)
-    if faces:
-        ax.add_collection3d(Poly3DCollection(faces, facecolors=face_colors, edgecolors=edge_colors,
-                                             linewidths=widths, linestyles=styles, alpha=0.95, zorder=2))
-    if labels:
-        for p in state.placed_packages:
-            x, y, z = p.position
-            dx, dy, dz = p.dimension
+        color = CMAP(norm(p.value))
+        style = "--" if p.is_fragile else "-"
+        
+        # Buat koleksi mandiri per balok agar ditumpuk berdasarkan zorder-nya
+        ax.add_collection3d(Poly3DCollection(box, facecolors=[color]*len(box), edgecolors=BLACK,
+                                             linewidths=0.8, linestyles=style, alpha=0.95, zorder=current_zorder))
+        if labels:
             ax.text(x + dx / 2, y + dy / 2, z + dz, p.id + ("*" if p.is_fragile else ""),
                     ha="center", va="bottom", fontsize=6.5, color=BROWN,
                     bbox=dict(boxstyle="round,pad=0.15", fc="white", ec="none", alpha=0.75),
-                    zorder=10)
+                    zorder=current_zorder + 1000)
+        current_zorder += 1
 
     ax.set_xlim(0, W)
     ax.set_ylim(0, L)
