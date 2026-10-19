@@ -1,3 +1,4 @@
+import os
 import sys
 from experiment_runner import run_experiment
 from generator import generate
@@ -11,7 +12,7 @@ def run_sa_experiment(file_name, n_runs=3, seeds=SEEDS, output_dir="../output"):
     def initial_state_factory():
         return generate(data.truck, data.packages)
     return run_experiment(
-        name="SA",
+        name=f"SA_{os.path.splitext(file_name)[0]}",
         algorithm=simulated_annealing,
         initial_state_factory=initial_state_factory,
         n_runs=n_runs,
