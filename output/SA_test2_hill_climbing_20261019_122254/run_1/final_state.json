@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "total_value": 200,
+    "current_weight": 60,
+    "max_capacity": 60,
+    "placed_count": 2,
+    "total_packages": 3,
+    "space_utilization_percent": 7.2
+  },
+  "truck": {
+    "width": 10,
+    "length": 10,
+    "height": 10,
+    "max_capacity": 60
+  },
+  "packages": [
+    {
+      "id": "HeavyBox1",
+      "width": 4,
+      "length": 4,
+      "height": 4,
+      "value": 100,
+      "weight": 50,
+      "eta": 1,
+      "is_fragile": false,
+      "orientation": [
+        "x",
+        "y",
+        "z"
+      ],
+      "position": null
+    },
+    {
+      "id": "HeavyBox2",
+      "width": 4,
+      "length": 4,
+      "height": 4,
+      "value": 120,
+      "weight": 50,
+      "eta": 2,
+      "is_fragile": false,
+      "orientation": [
+        "x",
+        "y",
+        "z"
+      ],
+      "position": [
+        5,
+        4,
+        0
+      ]
+    },
+    {
+      "id": "LightBox3",
+      "width": 2,
+      "length": 2,
+      "height": 2,
+      "value": 80,
+      "weight": 10,
+      "eta": 1,
+      "is_fragile": false,
+      "orientation": [
+        "x",
+        "y",
+        "z"
+      ],
+      "position": [
+        3,
+        2,
+        0
+      ]
+    }
+  ]
+}

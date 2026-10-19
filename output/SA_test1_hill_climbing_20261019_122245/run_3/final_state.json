@@ -1,0 +1,74 @@
+{
+  "summary": {
+    "total_value": 240,
+    "current_weight": 60,
+    "max_capacity": 200,
+    "placed_count": 2,
+    "total_packages": 3,
+    "space_utilization_percent": 29.63
+  },
+  "truck": {
+    "width": 6,
+    "length": 6,
+    "height": 6,
+    "max_capacity": 200
+  },
+  "packages": [
+    {
+      "id": "BoxA_Base",
+      "width": 6,
+      "length": 6,
+      "height": 2,
+      "value": 40,
+      "weight": 30,
+      "eta": 1,
+      "is_fragile": false,
+      "orientation": [
+        "x",
+        "z",
+        "y"
+      ],
+      "position": null
+    },
+    {
+      "id": "BoxB_FragileTop",
+      "width": 4,
+      "length": 4,
+      "height": 2,
+      "value": 150,
+      "weight": 10,
+      "eta": 2,
+      "is_fragile": true,
+      "orientation": [
+        "z",
+        "x",
+        "y"
+      ],
+      "position": [
+        1,
+        4,
+        2
+      ]
+    },
+    {
+      "id": "BoxC_Heavy",
+      "width": 4,
+      "length": 4,
+      "height": 2,
+      "value": 90,
+      "weight": 50,
+      "eta": 1,
+      "is_fragile": false,
+      "orientation": [
+        "x",
+        "y",
+        "z"
+      ],
+      "position": [
+        0,
+        1,
+        0
+      ]
+    }
+  ]
+}
