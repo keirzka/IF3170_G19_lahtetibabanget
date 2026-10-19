@@ -39,8 +39,6 @@ def state_to_dict(state):
                    if k not in ("position", "orientation")},
                 "orientation": list(p.orientation),
                 "position": list(p.position) if p.is_placed else None,
-                "dimension": list(p.dimension),
-                "inside": p.is_placed,
             }
             for p in state.packages
         ],
@@ -174,6 +172,16 @@ def run_experiment(name, algorithm, initial_state_factory, n_runs=3, output_dir=
         result.setdefault("initial_state", saved_initial)
         save_json(result["final_state"], os.path.join(run_dir, "final_state.json"))
         save_json({k: v for k, v in result.items() if k not in STATE_KEYS}, os.path.join(run_dir, "result.json"))
+        save_json({
+            "name": f"{name}_run{run}",
+            "seed": seed,
+            "duration": result["duration"],
+            "initial_value": result.get("initial_value"),
+            "final_value": result["final_value"],
+            "history": result.get("history", []),
+            "initial_state": saved_initial,
+            "final_state": result["final_state"],
+        }, os.path.join(run_dir, "record.json"))
         title = f"{name} - Run {run}"
         plot_objective(result, os.path.join(run_dir, "objective_plot.png"), f"{title}: Objective function vs iterasi")
         plot_acceptance_prob(result, os.path.join(run_dir, "acceptance_prob_plot.png"), f"{title}: " + r"$e^{\Delta E/T}$ vs iterasi")
