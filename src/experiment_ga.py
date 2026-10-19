@@ -9,10 +9,10 @@ from genetic import genetic_algorithm
 from models import Package, Truck
 from io_handler import state_to_json
 
-CONTROL_POPULATION = 50
-ITERATION_VARIATIONS = [50, 100, 200]   # populasi dikontrol
-CONTROL_ITERATION = 100
-POPULATION_VARIATIONS = [20, 50, 100]   # iterasi dikontrol
+CONTROL_POPULATION = 100
+ITERATION_VARIATIONS = [100, 300, 500]   # populasi dikontrol
+CONTROL_ITERATION = 300
+POPULATION_VARIATIONS = [50, 100, 200]   # iterasi dikontrol
 MUTATION_RATE = 0.1
 
 OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output", "ga")

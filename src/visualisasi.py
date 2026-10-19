@@ -24,6 +24,7 @@ ORANGE_PALE = "#FFE8CC"
 ORANGE_DARK = "#9D3B00"
 BROWN = "#3D1A00"
 GRAY = "#6B6B6B"
+BLACK = "#000000"
 CMAP = LinearSegmentedColormap.from_list("oranye", [ORANGE_PALE, ORANGE_LIGHT, ORANGE, ORANGE_DARK])
 
 DEFAULT_OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output", "viz")
@@ -75,8 +76,8 @@ def draw_state(state, title="State", save_path=None, labels=True, show=False):
         box = _box_faces(x, y, z, dx, dy, dz)
         faces += box
         face_colors += [CMAP(norm(p.value))] * len(box)
-        edge_colors += [BROWN if p.is_fragile else ORANGE_DARK] * len(box)
-        widths += [1.8 if p.is_fragile else 0.8] * len(box)
+        edge_colors += [BLACK] * len(box)
+        widths += [0.8] * len(box)
         styles += ["--" if p.is_fragile else "-"] * len(box)
     if faces:
         ax.add_collection3d(Poly3DCollection(faces, facecolors=face_colors, edgecolors=edge_colors,
