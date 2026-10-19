@@ -19,6 +19,8 @@ def steepest_ascent(truck : Truck, packages : List[Package], max_iteration = MAX
     current_state = initial_state
     current_value = objective(current_state)
 
+    history = [current_value]
+
     # Mulai timer
     start_time = time()
 
@@ -35,12 +37,13 @@ def steepest_ascent(truck : Truck, packages : List[Package], max_iteration = MAX
 
         current_state = best_neighbor
         current_value = best_neighbor_value
+        history.append(current_value)
 
     end_time = time()
 
     duration = end_time - start_time
 
-    return i, duration, initial_state, current_state, current_value
+    return i, duration, initial_state, current_state, current_value, history
 
 
 def sideways_move(truck : Truck, packages : List[Package], max_iteration = MAX_ITERATION, max_sideways_move = MAXIMUM_SIDEWAYS_MOVE) :
@@ -49,6 +52,8 @@ def sideways_move(truck : Truck, packages : List[Package], max_iteration = MAX_I
 
     current_state = initial_state
     current_value = objective(current_state)
+
+    history = [current_value]
 
     sideways_count = 0
 
@@ -78,12 +83,13 @@ def sideways_move(truck : Truck, packages : List[Package], max_iteration = MAX_I
 
         current_state = best_neighbor
         current_value = best_neighbor_value
+        history.append(current_value)
 
     end_time = time()
 
     duration = end_time - start_time
 
-    return i, duration, initial_state, current_state, current_value
+    return i, duration, initial_state, current_state, current_value, history
 
 def random_restart(truck : Truck, packages : List[Package], max_restart) : 
     total_iteration = 0
@@ -91,13 +97,20 @@ def random_restart(truck : Truck, packages : List[Package], max_restart) :
 
     best_state = None
     best_value = INVALID_VALUE
+    full_history = []
 
     start_time = time()
 
     for i in range(max_restart) :
-        it, _, init, finding, finding_value = steepest_ascent(truck, packages) 
+        it, _, init, finding, finding_value, run_history = steepest_ascent(truck, packages) 
 
         total_iteration += it
+
+        if not full_history:
+            full_history.append(run_history)
+        else:
+            full_history.extend(run_history[1:])
+
 
         if(not initial_state) : 
             initial_state = init
@@ -110,7 +123,7 @@ def random_restart(truck : Truck, packages : List[Package], max_restart) :
 
     duration = end_time - start_time
 
-    return total_iteration, duration, initial_state, best_state, best_value
+    return total_iteration, duration, initial_state, best_state, best_value, full_history
     
 def stochastic(truck : Truck, packages : List[Package], max_iteration = MAX_ITERATION) : 
     # Inisialisasi state
@@ -118,6 +131,8 @@ def stochastic(truck : Truck, packages : List[Package], max_iteration = MAX_ITER
 
     current_state = initial_state
     current_value = objective(current_state)
+
+    history = [current_value]
 
     # Mulai timer
     start_time = time()
@@ -138,11 +153,13 @@ def stochastic(truck : Truck, packages : List[Package], max_iteration = MAX_ITER
             current_state =  random_neighbor
             current_value = random_neighbor_value
 
+        history.append(current_value)
+
     end_time = time()
 
     duration = end_time - start_time
 
-    return i, duration, initial_state, current_state, current_value
+    return i, duration, initial_state, current_state, current_value, history
 
 
 # Helper : Get best State
