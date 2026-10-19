@@ -151,33 +151,69 @@ def plot_history(history, title="Nilai objective terhadap iterasi", save_path=No
         ax.spines[side].set_visible(False)
     return _finish(fig, save_path, show)
 
+def plot_history(history, title="Nilai objective terhadap iterasi", save_path=None,
+                 xlabel="Iterasi", ylabel="Nilai objective",
+                 labels=("Maksimum populasi", "Rata-rata populasi"), show=False):
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    if history and isinstance(history[0], (tuple, list)): # Untuk Genetic Algorithm
+        ax.plot(range(len(history)), [h[0] for h in history], color=ORANGE, lw=2, label=labels[0])
+        ax.plot(range(len(history)), [h[1] for h in history], color=ORANGE_LIGHT, lw=2, ls="--", label=labels[1])
+        ax.legend(frameon=False)
+    else: # Untuk HC dan SA
+        ax.plot(range(len(history)), history, color=ORANGE, lw=2)
+    ax.set_title(title, color=BROWN, fontsize=11)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid(alpha=0.25)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    return _finish(fig, save_path, show)
+
+def plot_sa_probability(prob_history, title="Probabilitas Penerimaan SA", save_path=None, show=False):
+    fig, ax = plt.subplots(figsize=(8, 4.5))
+    ax.plot(range(len(prob_history)), prob_history, color=ORANGE_LIGHT, lw=1)
+    ax.set_title(title, color=BROWN, fontsize=11)
+    ax.set_xlabel("Iterasi")
+    ax.set_ylabel(r"$e^{\frac{\Delta E}{T}}$")
+    ax.grid(alpha=0.25)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    return _finish(fig, save_path, show)
+
+def visualize_ga_run(rec, name, out_dir=DEFAULT_OUT, show=False):
+    info = [f"populasi {rec['population_size']}", f"{rec['generations']} generasi", f"{rec.get('duration', 0):.2f} s"]
+    draw_state(state_from_json(rec["initial_state"]), f"{name} - state awal", os.path.join(out_dir, f"{name}_awal.png"), show=show)
+    draw_state(state_from_json(rec["final_state"]), f"{name} - state akhir", os.path.join(out_dir, f"{name}_akhir.png"), show=show)
+    plot_history(rec["history"], f"{name} (Genetic Algorithm)\n{' | '.join(info)}", os.path.join(out_dir, f"{name}_history.png"), xlabel="Generasi", show=show)
+
+def visualize_sa_run(rec, name, out_dir=DEFAULT_OUT, show=False):
+    stuck_info = f"Stuck di optima: {rec.get('stuck_count', 0)} kali"
+    info = [f"Iterasi: {rec.get('iterations', 0)}", f"{rec.get('duration', 0):.2f} s", stuck_info]
+    draw_state(state_from_json(rec["initial_state"]), f"{name} - state awal", os.path.join(out_dir, f"{name}_awal.png"), show=show)
+    draw_state(state_from_json(rec["final_state"]), f"{name} - state akhir", os.path.join(out_dir, f"{name}_akhir.png"), show=show)
+    plot_history(rec["history"], f"{name} (Simulated Annealing)\n{' | '.join(info)}", os.path.join(out_dir, f"{name}_history.png"), show=show)
+    if "prob_history" in rec:
+        plot_sa_probability(rec["prob_history"], f"Probabilitas Penerimaan - {name}", os.path.join(out_dir, f"{name}_probabilitas.png"), show=show)
+
+def visualize_hc_run(rec, name, out_dir=DEFAULT_OUT, show=False):
+    info = [f"{rec.get('duration', 0):.2f} s"]
+    draw_state(state_from_json(rec["initial_state"]), f"{name} - state awal", os.path.join(out_dir, f"{name}_awal.png"), show=show)
+    draw_state(state_from_json(rec["final_state"]), f"{name} - state akhir", os.path.join(out_dir, f"{name}_akhir.png"), show=show)
+    if "history" in rec:
+        plot_history(rec["history"], f"{name} (Hill Climbing)\n{' | '.join(info)}", os.path.join(out_dir, f"{name}_history.png"), show=show)
+
 def visualize_run(record_path, out_dir=DEFAULT_OUT, show=False):
     with open(record_path) as f:
         rec = json.load(f)
     name = rec.get("name", os.path.splitext(os.path.basename(record_path))[0])
-
-    info = []
+    
+    # Router
     if "population_size" in rec:
-        info.append(f"populasi {rec['population_size']}")
-    if "generations" in rec:
-        info.append(f"{rec['generations']} generasi")
-    if "duration" in rec:
-        info.append(f"{rec['duration']:.2f} s")
-    if "seed" in rec:
-        info.append(f"seed {rec['seed']}")
-    is_ga = "population_size" in rec
-
-    paths = [
-        draw_state(state_from_json(rec["initial_state"]), f"{name} - state awal",
-                   os.path.join(out_dir, f"{name}_awal.png"), show=show),
-        draw_state(state_from_json(rec["final_state"]), f"{name} - state akhir",
-                   os.path.join(out_dir, f"{name}_akhir.png"), show=show),
-        plot_history(rec["history"], f"{name}\n{' | '.join(info)}",
-                     os.path.join(out_dir, f"{name}_history.png"),
-                     xlabel="Generasi" if is_ga else "Iterasi", show=show),
-    ]
-    return paths
-
+        visualize_ga_run(rec, name, out_dir, show)
+    elif "prob_history" in rec:
+        visualize_sa_run(rec, name, out_dir, show)
+    else:
+        visualize_hc_run(rec, name, out_dir, show)
 
 def load_records(directory):
     records = []
