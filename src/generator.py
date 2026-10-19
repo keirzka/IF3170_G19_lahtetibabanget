@@ -34,9 +34,6 @@ def generate(truck : Truck, packages : List[Package], limit : int = 100) :
                     # Pastikan tidak melebihi tinggi truk
 <<<<<<< HEAD
                     if(z + h <= truck.height) :
-=======
-                    if(z + h < truck.height) :
->>>>>>> origin/feat/simulated-annealing
                         p.position = (x, y, z)
 
                     else : 
