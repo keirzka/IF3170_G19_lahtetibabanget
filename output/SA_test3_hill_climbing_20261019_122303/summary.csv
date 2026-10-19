@@ -1,4 +1,0 @@
-run,accepted_moves,algorithm,best_value,cfg_input_file,duration,final_value,initial_value,iterations,param_T0,param_frozen_limit,param_init_prob,param_max_iter,param_min_percent,param_neighborhood_size,param_seed,param_size_factor,param_temp_factor,param_temp_length,seed,stopped_by,stuck_count,temperatures
-1,1034,Simulated Annealing,395,test3_hill_climbing.json,0.18086439999751747,395,50,1360,27.692735424777567,5,0.4,1000000,0.02,5,,16,0.95,80,1,frozen,16,17
-2,1836,Simulated Annealing,395,test3_hill_climbing.json,0.2741548999911174,395,235,2400,38.57658138680619,5,0.4,1000000,0.02,5,,16,0.95,80,2,frozen,29,30
-3,1947,Simulated Annealing,395,test3_hill_climbing.json,0.30680789999314584,395,160,2560,48.89375888493114,5,0.4,1000000,0.02,5,,16,0.95,80,3,frozen,31,32

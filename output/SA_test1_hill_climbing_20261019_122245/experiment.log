@@ -1,9 +1,0 @@
-12:22:45 | INFO | Mulai eksperimen 'SA_test1_hill_climbing' (3 run), config={'input_file': 'test1_hill_climbing.json'}
-12:22:45 | INFO | Run 1: mulai (seed=1)
-12:22:46 | INFO | Run 1: selesai | initial=40 final=280 durasi=0.013s iterasi=240 stuck=4
-12:22:46 | INFO | Run 2: mulai (seed=2)
-12:22:46 | INFO | Run 2: selesai | initial=0 final=280 durasi=0.015s iterasi=336 stuck=4
-12:22:46 | INFO | Run 3: mulai (seed=3)
-12:22:46 | INFO | Run 3: selesai | initial=90 final=240 durasi=0.062s iterasi=1248 stuck=25
-12:22:47 | INFO | Selesai. mean_final=266.67 std=18.86 mean_durasi=0.030s
-12:22:47 | INFO | Output tersimpan di ../output\SA_test1_hill_climbing_20261019_122245
