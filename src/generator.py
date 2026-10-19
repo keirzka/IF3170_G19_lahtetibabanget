@@ -32,7 +32,11 @@ def generate(truck : Truck, packages : List[Package], limit : int = 100) :
                     z = drop_z(State(truck, packages_copy), i, x, y, w, l)
 
                     # Pastikan tidak melebihi tinggi truk
+<<<<<<< HEAD
                     if(z + h <= truck.height) :
+=======
+                    if(z + h < truck.height) :
+>>>>>>> origin/feat/simulated-annealing
                         p.position = (x, y, z)
 
                     else : 

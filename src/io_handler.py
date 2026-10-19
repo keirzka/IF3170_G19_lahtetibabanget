@@ -12,6 +12,7 @@ def load_data_from_json(file_path : str) :
 
     state = State(truck=truck, packages=packages)
 
+<<<<<<< HEAD
     return state
 
 def state_to_json(state):
@@ -44,3 +45,6 @@ def state_from_json(data):
                                 position=tuple(pos) if pos is not None else None,
                                 orientation=tuple(ori)))
     return State(truck, packages)
+=======
+    return state
+>>>>>>> origin/feat/simulated-annealing
