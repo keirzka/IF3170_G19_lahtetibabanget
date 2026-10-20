@@ -1,0 +1,4 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,objective,best_value,stuck_count,temperatures,accepted_moves,stopped_by,T0,temp_factor,temp_length,init_prob,min_percent,final_total_value
+sa_run1,sa,1,1,11191,49838,34560,14.25254917500024,Simulated Annealing,dataset_n30.json,value_per_weight,49839,57,72,26171,frozen,1491.3267805629075,0.95,480,0.4,0.02,4741
+sa_run2,sa,2,2,10120,53933,32640,13.287022615000751,Simulated Annealing,dataset_n30.json,value_per_weight,53990,48,68,24943,frozen,1496.3668965171366,0.95,480,0.4,0.02,4899
+sa_run3,sa,3,3,14480,48299,36480,15.168228566000835,Simulated Annealing,dataset_n30.json,value_per_weight,48389,61,76,28637,frozen,1819.602469578472,0.95,480,0.4,0.02,4088

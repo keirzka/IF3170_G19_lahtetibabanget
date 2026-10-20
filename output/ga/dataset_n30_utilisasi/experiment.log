@@ -1,0 +1,26 @@
+10:21:45 | Genetic Algorithm | input=dataset_n30.json | 1 truk | 30 paket | mutation_rate=0.1 | elitism=False | objective=utilisasi
+10:21:47 | iterasi_pop100_gen100_run1: awal=4131 akhir=4294 (total value 2665 -> 2885) durasi=1.431s
+10:21:48 | iterasi_pop100_gen100_run2: awal=3598 akhir=3980 (total value 2398 -> 2608) durasi=1.285s
+10:21:50 | iterasi_pop100_gen100_run3: awal=4090 akhir=4530 (total value 2727 -> 2992) durasi=1.627s
+10:21:55 | iterasi_pop100_gen300_run1: awal=3620 akhir=5916 (total value 2492 -> 3563) durasi=5.312s
+10:22:01 | iterasi_pop100_gen300_run2: awal=4620 akhir=6366 (total value 2873 -> 3646) durasi=6.058s
+10:22:06 | iterasi_pop100_gen300_run3: awal=3848 akhir=5187 (total value 2535 -> 3284) durasi=4.796s
+10:22:15 | iterasi_pop100_gen500_run1: awal=4171 akhir=6932 (total value 2754 -> 3892) durasi=8.842s
+10:22:25 | iterasi_pop100_gen500_run2: awal=3758 akhir=7175 (total value 2498 -> 4157) durasi=10.030s
+10:22:33 | iterasi_pop100_gen500_run3: awal=4149 akhir=6629 (total value 2694 -> 3863) durasi=8.367s
+10:22:36 | populasi_pop50_gen300_run1: awal=3681 akhir=4934 (total value 2406 -> 3203) durasi=2.366s
+10:22:38 | populasi_pop50_gen300_run2: awal=3751 akhir=5420 (total value 2554 -> 3254) durasi=2.117s
+10:22:40 | populasi_pop50_gen300_run3: awal=3321 akhir=4095 (total value 2363 -> 2750) durasi=2.242s
+10:22:45 | populasi_pop100_gen300_run1: awal=4245 akhir=7062 (total value 2776 -> 4017) durasi=4.736s
+10:22:49 | populasi_pop100_gen300_run2: awal=3406 akhir=5624 (total value 2238 -> 3400) durasi=4.629s
+10:22:55 | populasi_pop100_gen300_run3: awal=3884 akhir=5427 (total value 2617 -> 3411) durasi=5.554s
+10:23:05 | populasi_pop200_gen300_run1: awal=5041 akhir=6361 (total value 3226 -> 3718) durasi=10.075s
+10:23:16 | populasi_pop200_gen300_run2: awal=4409 akhir=6933 (total value 2842 -> 3929) durasi=10.896s
+10:23:25 | populasi_pop200_gen300_run3: awal=4475 akhir=7688 (total value 2918 -> 4231) durasi=9.456s
+10:23:25 | iterasi_pop100_gen100: rata-rata nilai akhir=4268.00 std=225.29 rata-rata durasi=1.448s
+10:23:25 | iterasi_pop100_gen300: rata-rata nilai akhir=5823.00 std=485.80 rata-rata durasi=5.389s
+10:23:25 | iterasi_pop100_gen500: rata-rata nilai akhir=6912.00 std=223.35 rata-rata durasi=9.080s
+10:23:25 | populasi_pop50_gen300: rata-rata nilai akhir=4816.33 std=547.29 rata-rata durasi=2.242s
+10:23:25 | populasi_pop100_gen300: rata-rata nilai akhir=6037.67 std=728.76 rata-rata durasi=4.973s
+10:23:25 | populasi_pop200_gen300: rata-rata nilai akhir=6994.00 std=543.46 rata-rata durasi=10.142s
+10:23:25 | Output tersimpan di /home/simon/College/ai/IF3170_G19_lahtetibabanget/src/../output/ga/dataset_n30_utilisasi

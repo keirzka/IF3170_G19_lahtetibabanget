@@ -1,0 +1,21 @@
+10:21:15 | Steepest Ascent Hill-Climbing | input=dataset_n30.json | 1 truk | 30 paket | objective=utilisasi | seed=[1, 2, 3]
+10:21:15 | steepest_ascent_run1: awal=2035 akhir=3326 (total value 2227) iterasi=5 durasi=0.031s
+10:21:15 | steepest_ascent_run2: awal=2336 akhir=2760 (total value 1903) iterasi=2 durasi=0.010s
+10:21:15 | steepest_ascent_run3: awal=2483 akhir=3158 (total value 2141) iterasi=6 durasi=0.047s
+10:21:15 | Hill-Climbing with Sideways Move | input=dataset_n30.json | 1 truk | 30 paket | objective=utilisasi | seed=[1, 2, 3]
+10:21:17 | sideways_move_run1: awal=2035 akhir=7368 (total value 4032) iterasi=200 durasi=2.211s
+10:21:21 | sideways_move_run2: awal=2336 akhir=8284 (total value 4558) iterasi=313 durasi=3.125s
+10:21:24 | sideways_move_run3: awal=2483 akhir=8071 (total value 4383) iterasi=449 durasi=3.857s
+10:21:24 | Stochastic Hill-Climbing | input=dataset_n30.json | 1 truk | 30 paket | objective=utilisasi | seed=[1, 2, 3]
+10:21:25 | stochastic_run1: awal=2035 akhir=5008 (total value 3212) iterasi=1000 durasi=0.368s
+10:21:25 | stochastic_run2: awal=2336 akhir=4886 (total value 2945) iterasi=1000 durasi=0.335s
+10:21:25 | stochastic_run3: awal=2483 akhir=4961 (total value 3094) iterasi=1000 durasi=0.312s
+10:21:25 | Random Restart Hill-Climbing | input=dataset_n30.json | 1 truk | 30 paket | objective=utilisasi | seed=[1, 2, 3]
+10:21:26 | random_restart_run1: awal=2035 akhir=4811 (total value 3096) iterasi=48 durasi=0.160s
+10:21:26 | random_restart_run2: awal=2336 akhir=4110 (total value 2628) iterasi=37 durasi=0.106s
+10:21:26 | random_restart_run3: awal=2483 akhir=3926 (total value 2583) iterasi=49 durasi=0.138s
+10:21:26 | steepest_ascent: rata-rata nilai akhir=3081.33 std=237.34 rata-rata durasi=0.029s
+10:21:26 | sideways_move: rata-rata nilai akhir=7907.67 std=391.38 rata-rata durasi=3.064s
+10:21:26 | stochastic: rata-rata nilai akhir=4951.67 std=50.24 rata-rata durasi=0.338s
+10:21:26 | random_restart: rata-rata nilai akhir=4282.33 std=381.30 rata-rata durasi=0.135s
+10:21:26 | Output tersimpan di /home/simon/College/ai/IF3170_G19_lahtetibabanget/src/../output/hc/dataset_n30_utilisasi

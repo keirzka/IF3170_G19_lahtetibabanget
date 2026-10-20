@@ -1,0 +1,6 @@
+10:17:53 | Simulated Annealing | input=dataset_n30.json | 1 truk | 30 paket | objective=value_per_weight | seed=[1, 2, 3]
+10:18:07 | sa_run1: awal=11191 akhir=49838 (total value 4741) iterasi=34560 durasi=14.253s
+10:18:20 | sa_run2: awal=10120 akhir=53933 (total value 4899) iterasi=32640 durasi=13.287s
+10:18:36 | sa_run3: awal=14480 akhir=48299 (total value 4088) iterasi=36480 durasi=15.168s
+10:18:36 | sa: rata-rata nilai akhir=50690.00 std=2377.66 rata-rata durasi=14.236s
+10:18:36 | Output tersimpan di /home/simon/College/ai/IF3170_G19_lahtetibabanget/src/../output/sa/dataset_n30_value_per_weight

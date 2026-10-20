@@ -1,0 +1,13 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,objective,max_iteration,num_neighbor,final_total_value,max_sideways_move,sideways_moves,max_restart,restarts
+steepest_ascent_run1,steepest_ascent,1,1,11191,17829,5,0.05637543600096251,Steepest Ascent Hill-Climbing,dataset_n30.json,value_per_weight,1000,20,1985,,,,
+steepest_ascent_run2,steepest_ascent,2,2,10120,25696,7,0.06614988799992716,Steepest Ascent Hill-Climbing,dataset_n30.json,value_per_weight,1000,20,3202,,,,
+steepest_ascent_run3,steepest_ascent,3,3,14480,27744,7,0.0648210180006572,Steepest Ascent Hill-Climbing,dataset_n30.json,value_per_weight,1000,20,2320,,,,
+sideways_move_run1,sideways_move,1,1,11191,37008,181,1.544375007000781,Hill-Climbing with Sideways Move,dataset_n30.json,value_per_weight,1000,20,3090,100,162,,
+sideways_move_run2,sideways_move,2,2,10120,43920,210,2.1190254619996267,Hill-Climbing with Sideways Move,dataset_n30.json,value_per_weight,1000,20,4381,100,186,,
+sideways_move_run3,sideways_move,3,3,14480,43046,123,0.8184509410002647,Hill-Climbing with Sideways Move,dataset_n30.json,value_per_weight,1000,20,3339,100,107,,
+stochastic_run1,stochastic,1,1,11191,35460,1000,0.3170968329995958,Stochastic Hill-Climbing,dataset_n30.json,value_per_weight,1000,,3077,,,,
+stochastic_run2,stochastic,2,2,10120,28762,1000,0.40129993300070055,Stochastic Hill-Climbing,dataset_n30.json,value_per_weight,1000,,3048,,,,
+stochastic_run3,stochastic,3,3,14480,37257,1000,0.3193888669993612,Stochastic Hill-Climbing,dataset_n30.json,value_per_weight,1000,,3154,,,,
+random_restart_run1,random_restart,1,1,11191,34665,44,0.15797183200083964,Random Restart Hill-Climbing,dataset_n30.json,value_per_weight,,20,2842,,,5,5
+random_restart_run2,random_restart,2,2,10120,38068,52,0.18174824500056275,Random Restart Hill-Climbing,dataset_n30.json,value_per_weight,,20,3085,,,5,5
+random_restart_run3,random_restart,3,3,14480,36486,57,0.1833810550015187,Random Restart Hill-Climbing,dataset_n30.json,value_per_weight,,20,3236,,,5,5

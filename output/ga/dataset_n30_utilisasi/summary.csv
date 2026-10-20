@@ -1,0 +1,19 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,objective,group,initial_total_value,final_total_value,population_size,generations,mutation_rate,elitism
+iterasi_pop100_gen100_run1,iterasi_pop100_gen100,1,1000,4131,4294,100,1.4314395239998703,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2665,2885,100,100,0.1,False
+iterasi_pop100_gen100_run2,iterasi_pop100_gen100,2,1001,3598,3980,100,1.2851855210010399,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2398,2608,100,100,0.1,False
+iterasi_pop100_gen100_run3,iterasi_pop100_gen100,3,1002,4090,4530,100,1.6273843520011724,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2727,2992,100,100,0.1,False
+iterasi_pop100_gen300_run1,iterasi_pop100_gen300,1,1003,3620,5916,300,5.312151688000085,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2492,3563,100,300,0.1,False
+iterasi_pop100_gen300_run2,iterasi_pop100_gen300,2,1004,4620,6366,300,6.0584806599999865,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2873,3646,100,300,0.1,False
+iterasi_pop100_gen300_run3,iterasi_pop100_gen300,3,1005,3848,5187,300,4.795936828000777,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2535,3284,100,300,0.1,False
+iterasi_pop100_gen500_run1,iterasi_pop100_gen500,1,1006,4171,6932,500,8.842428997000752,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2754,3892,100,500,0.1,False
+iterasi_pop100_gen500_run2,iterasi_pop100_gen500,2,1007,3758,7175,500,10.030475984000077,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2498,4157,100,500,0.1,False
+iterasi_pop100_gen500_run3,iterasi_pop100_gen500,3,1008,4149,6629,500,8.366775868000332,Genetic Algorithm,dataset_n30.json,utilisasi,iterasi,2694,3863,100,500,0.1,False
+populasi_pop50_gen300_run1,populasi_pop50_gen300,1,1009,3681,4934,300,2.3664311569991696,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2406,3203,50,300,0.1,False
+populasi_pop50_gen300_run2,populasi_pop50_gen300,2,1010,3751,5420,300,2.1173406220004836,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2554,3254,50,300,0.1,False
+populasi_pop50_gen300_run3,populasi_pop50_gen300,3,1011,3321,4095,300,2.241656875999979,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2363,2750,50,300,0.1,False
+populasi_pop100_gen300_run1,populasi_pop100_gen300,1,1012,4245,7062,300,4.736470627000017,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2776,4017,100,300,0.1,False
+populasi_pop100_gen300_run2,populasi_pop100_gen300,2,1013,3406,5624,300,4.628839044000415,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2238,3400,100,300,0.1,False
+populasi_pop100_gen300_run3,populasi_pop100_gen300,3,1014,3884,5427,300,5.553664848001063,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2617,3411,100,300,0.1,False
+populasi_pop200_gen300_run1,populasi_pop200_gen300,1,1015,5041,6361,300,10.075057633001052,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,3226,3718,200,300,0.1,False
+populasi_pop200_gen300_run2,populasi_pop200_gen300,2,1016,4409,6933,300,10.895713295998576,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2842,3929,200,300,0.1,False
+populasi_pop200_gen300_run3,populasi_pop200_gen300,3,1017,4475,7688,300,9.45553428600033,Genetic Algorithm,dataset_n30.json,utilisasi,populasi,2918,4231,200,300,0.1,False

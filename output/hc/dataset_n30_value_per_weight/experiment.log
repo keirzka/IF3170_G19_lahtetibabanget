@@ -1,0 +1,21 @@
+10:17:46 | Steepest Ascent Hill-Climbing | input=dataset_n30.json | 1 truk | 30 paket | objective=value_per_weight | seed=[1, 2, 3]
+10:17:47 | steepest_ascent_run1: awal=11191 akhir=17829 (total value 1985) iterasi=5 durasi=0.056s
+10:17:47 | steepest_ascent_run2: awal=10120 akhir=25696 (total value 3202) iterasi=7 durasi=0.066s
+10:17:47 | steepest_ascent_run3: awal=14480 akhir=27744 (total value 2320) iterasi=7 durasi=0.065s
+10:17:47 | Hill-Climbing with Sideways Move | input=dataset_n30.json | 1 truk | 30 paket | objective=value_per_weight | seed=[1, 2, 3]
+10:17:48 | sideways_move_run1: awal=11191 akhir=37008 (total value 3090) iterasi=181 durasi=1.544s
+10:17:50 | sideways_move_run2: awal=10120 akhir=43920 (total value 4381) iterasi=210 durasi=2.119s
+10:17:51 | sideways_move_run3: awal=14480 akhir=43046 (total value 3339) iterasi=123 durasi=0.818s
+10:17:51 | Stochastic Hill-Climbing | input=dataset_n30.json | 1 truk | 30 paket | objective=value_per_weight | seed=[1, 2, 3]
+10:17:52 | stochastic_run1: awal=11191 akhir=35460 (total value 3077) iterasi=1000 durasi=0.317s
+10:17:52 | stochastic_run2: awal=10120 akhir=28762 (total value 3048) iterasi=1000 durasi=0.401s
+10:17:52 | stochastic_run3: awal=14480 akhir=37257 (total value 3154) iterasi=1000 durasi=0.319s
+10:17:52 | Random Restart Hill-Climbing | input=dataset_n30.json | 1 truk | 30 paket | objective=value_per_weight | seed=[1, 2, 3]
+10:17:52 | random_restart_run1: awal=11191 akhir=34665 (total value 2842) iterasi=44 durasi=0.158s
+10:17:53 | random_restart_run2: awal=10120 akhir=38068 (total value 3085) iterasi=52 durasi=0.182s
+10:17:53 | random_restart_run3: awal=14480 akhir=36486 (total value 3236) iterasi=57 durasi=0.183s
+10:17:53 | steepest_ascent: rata-rata nilai akhir=23756.33 std=4273.84 rata-rata durasi=0.062s
+10:17:53 | sideways_move: rata-rata nilai akhir=41324.67 std=3073.13 rata-rata durasi=1.494s
+10:17:53 | stochastic: rata-rata nilai akhir=33826.33 std=3655.40 rata-rata durasi=0.346s
+10:17:53 | random_restart: rata-rata nilai akhir=36406.33 std=1390.41 rata-rata durasi=0.174s
+10:17:53 | Output tersimpan di /home/simon/College/ai/IF3170_G19_lahtetibabanget/src/../output/hc/dataset_n30_value_per_weight

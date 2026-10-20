@@ -1,0 +1,6 @@
+10:21:26 | Simulated Annealing | input=dataset_n30.json | 1 truk | 30 paket | objective=utilisasi | seed=[1, 2, 3]
+10:21:32 | sa_run1: awal=2035 akhir=8839 (total value 4747) iterasi=18720 durasi=6.055s
+10:21:39 | sa_run2: awal=2336 akhir=7802 (total value 4262) iterasi=24000 durasi=6.694s
+10:21:45 | sa_run3: awal=2483 akhir=8748 (total value 4677) iterasi=22560 durasi=6.676s
+10:21:45 | sa: rata-rata nilai akhir=8463.00 std=468.87 rata-rata durasi=6.475s
+10:21:45 | Output tersimpan di /home/simon/College/ai/IF3170_G19_lahtetibabanget/src/../output/sa/dataset_n30_utilisasi
