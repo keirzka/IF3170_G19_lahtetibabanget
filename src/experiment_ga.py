@@ -4,6 +4,7 @@ import os
 from experiment_runner import (input_name, log_group_statistics, output_dir_for, save_record, setup_logger, summary_row, write_summary)
 from genetic import genetic_algorithm
 from io_handler import load_data_from_json
+from objective import get_objective_mode, objective
 
 CONTROL_POPULATION = 100
 ITERATION_VARIATIONS = [100, 300, 500]
@@ -25,7 +26,8 @@ def run_ga_experiment(file_name, runs=3, base_seed=BASE_SEED, elitism=False):
     logger = setup_logger(out_dir, f"ga_{input_name(file_name)}")
     logger.info(f"Genetic Algorithm | input={os.path.basename(file_name)} | "
                 f"{len(data.trucks)} truk | {len(data.packages)} paket | "
-                f"mutation_rate={MUTATION_RATE} | elitism={elitism}")
+                f"mutation_rate={MUTATION_RATE} | elitism={elitism} | "
+                f"objective={get_objective_mode()}")
 
     rows = []
     counter = 0
@@ -44,13 +46,16 @@ def run_ga_experiment(file_name, runs=3, base_seed=BASE_SEED, elitism=False):
                 "name": f"{variant}_run{run}",
                 "variant": variant,
                 "input_file": os.path.basename(file_name),
+                "objective": get_objective_mode(),
                 "group": group,
                 "run": run,
                 "seed": seed,
                 "duration": duration,
                 "iterations": iterations,
-                "initial_value": initial_state.total_value,
+                "initial_value": max(0, objective(initial_state)),
                 "final_value": best_value,
+                "initial_total_value": initial_state.total_value,
+                "final_total_value": best_state.total_value,
                 "population_size": population,
                 "generations": generations,
                 "mutation_rate": MUTATION_RATE,
@@ -62,6 +67,7 @@ def run_ga_experiment(file_name, runs=3, base_seed=BASE_SEED, elitism=False):
             save_record(out_dir, record)
             rows.append(summary_row(record))
             logger.info(f"{record['name']}: awal={record['initial_value']} akhir={best_value} "
+                        f"(total value {record['initial_total_value']} -> {record['final_total_value']}) "
                         f"durasi={duration:.3f}s")
     write_summary(out_dir, rows)
     log_group_statistics(logger, rows)

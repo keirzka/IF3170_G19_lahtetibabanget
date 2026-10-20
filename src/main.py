@@ -6,7 +6,7 @@ from experiment_runner import OUTPUT_DIR, input_name
 from experiment_sa import run_sa_experiment
 from generator import generate
 from io_handler import load_data_from_json
-from objective import objective
+from objective import get_objective_mode, objective, set_objective_mode
 from validator import is_valid
 from visualisasi import draw_state, plot_algorithm_comparison, visualize_folder
 
@@ -18,15 +18,33 @@ Optimasi Pengisian Paket ke Truk (Local Search)
 4. Eksperimen Genetic Algorithm (18 run)
 5. Jalankan semua eksperimen + visualisasi
 6. Buat visualisasi dan grafik perbandingan dari output yang ada
+7. Ganti objective function
 0. Keluar
 """
+
+OBJECTIVES = {
+    "1": ("value", "Total value (default)"),
+    "2": ("value_per_weight", "Value per berat"),
+    "3": ("utilisasi", "Pemanfaatan ruang dan berat"),
+}
+
+def choose_objective():
+    for key, (_, description) in OBJECTIVES.items():
+        print(f"{key}. {description}")
+    choice = input("Pilih objective: ").strip()
+    if choice in OBJECTIVES:
+        set_objective_mode(OBJECTIVES[choice][0])
+        print(f"Objective diganti ke: {get_objective_mode()}")
+    else:
+        print("Pilihan tidak dikenal, objective tidak berubah.")
 
 def show_initial_state(file_name):
     data = load_data_from_json(file_name)
     random.seed(1)
     state = generate(data.trucks, data.packages)
     print(f"Status valid         : {is_valid(state)}")
-    print(f"Objective value      : {objective(state)}")
+    print(f"Objective value      : {objective(state)} ({get_objective_mode()})")
+    print(f"Total value          : {state.total_value}")
     print(f"Paket di dalam truk  : {len(state.placed_packages)} dari {len(state.packages)}")
     for t, truck in enumerate(state.trucks):
         print(f"Truk {t + 1}               : berat {state.weight_in(t)}/{truck.max_capacity}, "
@@ -54,9 +72,10 @@ def main():
         "5": lambda: (run_hc_experiment(file_name), run_sa_experiment(file_name),
                       run_ga_experiment(file_name), visualize_all(file_name)),
         "6": lambda: visualize_all(file_name),
+        "7": choose_objective,
     }
     while True:
-        choice = input(MENU + "Pilih menu: ").strip()
+        choice = input(MENU + f"Objective saat ini: {get_objective_mode()}\nPilih menu: ").strip()
         if choice == "0":
             break
         if choice in actions:

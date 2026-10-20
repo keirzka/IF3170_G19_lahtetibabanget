@@ -9,13 +9,17 @@ import time
 from generator import generate
 from io_handler import load_data_from_json, state_to_json
 from models import State
+from objective import get_objective_mode
 
 OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output")
 DEFAULT_SEEDS = [1, 2, 3]
+DEFAULT_OBJECTIVE = "value"
 SUMMARY_FIELDS = ["name", "variant", "run", "seed", "initial_value", "final_value", "iterations", "duration"]
 
 def input_name(file_name):
-    return os.path.splitext(os.path.basename(file_name))[0]
+    name = os.path.splitext(os.path.basename(file_name))[0]
+    mode = get_objective_mode()
+    return name if mode == DEFAULT_OBJECTIVE else f"{name}_{mode}"
 
 def output_dir_for(algorithm_key, file_name):
     path = os.path.join(OUTPUT_DIR, algorithm_key, input_name(file_name))
@@ -85,7 +89,8 @@ def run_experiment(algorithm, variant, file_name, search_fn, seeds=DEFAULT_SEEDS
     out_dir = output_dir_for(algorithm_key or variant, file_name)
     logger = logger or setup_logger(out_dir, variant)
     logger.info(f"{algorithm} | input={os.path.basename(file_name)} | "
-                f"{len(data.trucks)} truk | {len(data.packages)} paket | seed={list(seeds)}")
+                f"{len(data.trucks)} truk | {len(data.packages)} paket | "
+                f"objective={get_objective_mode()} | seed={list(seeds)}")
     rows = []
     for run, seed in enumerate(seeds, 1):
         seed_everything(seed)
@@ -98,6 +103,7 @@ def run_experiment(algorithm, variant, file_name, search_fn, seeds=DEFAULT_SEEDS
             "name": f"{variant}_run{run}",
             "variant": variant,
             "input_file": os.path.basename(file_name),
+            "objective": get_objective_mode(),
             "run": run,
             "seed": seed,
             "duration": duration,
@@ -109,6 +115,7 @@ def run_experiment(algorithm, variant, file_name, search_fn, seeds=DEFAULT_SEEDS
         final_state = result.pop("final_state")
         history = result.pop("history")
         record.update(result)
+        record["final_total_value"] = final_state.total_value
         record["history"] = history
         record["initial_state"] = initial_state
         record["final_state"] = final_state
@@ -116,6 +123,6 @@ def run_experiment(algorithm, variant, file_name, search_fn, seeds=DEFAULT_SEEDS
         row = summary_row(record)
         rows.append(row)
         logger.info(f"{record['name']}: awal={record['initial_value']} "
-                    f"akhir={record['final_value']} iterasi={record['iterations']} "
-                    f"durasi={duration:.3f}s")
+                    f"akhir={record['final_value']} (total value {record['final_total_value']}) "
+                    f"iterasi={record['iterations']} durasi={duration:.3f}s")
     return rows, out_dir, logger
