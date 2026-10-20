@@ -1,29 +1,16 @@
-# Pemakaian:
-#     python experiment_ga.py data/dataset_n30.json [--seed 1000] [--elitism] [--runs 3]
 import argparse
-import csv
-import json
 import os
 
+from experiment_runner import (input_name, log_group_statistics, output_dir_for, save_record, setup_logger, summary_row, write_summary)
 from genetic import genetic_algorithm
-from models import Package, Truck
-from io_handler import state_to_json
+from io_handler import load_data_from_json
 
 CONTROL_POPULATION = 100
-ITERATION_VARIATIONS = [100, 300, 500]   # populasi dikontrol
+ITERATION_VARIATIONS = [100, 300, 500]
 CONTROL_ITERATION = 300
-POPULATION_VARIATIONS = [50, 100, 200]   # iterasi dikontrol
+POPULATION_VARIATIONS = [50, 100, 200]
 MUTATION_RATE = 0.1
-
-OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "output", "ga")
-
-
-def load_input(path):
-    with open(path) as f:
-        data = json.load(f)
-    truck = Truck(**data["Truck"])
-    packages = [Package(**p) for p in data["Package"]]
-    return truck, packages
+BASE_SEED = 1000
 
 
 def build_configs():
@@ -32,51 +19,64 @@ def build_configs():
     return configs
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("input")
-    ap.add_argument("--seed", type=int, default=1000, help="seed dasar; run ke-k memakai seed+k")
-    ap.add_argument("--runs", type=int, default=3)
-    ap.add_argument("--elitism", action="store_true")
-    ap.add_argument("--out", default=OUT_DIR)
-    args = ap.parse_args()
-
-    truck, packages = load_input(args.input)
-    os.makedirs(args.out, exist_ok=True)
+def run_ga_experiment(file_name, runs=3, base_seed=BASE_SEED, elitism=False):
+    data = load_data_from_json(file_name)
+    out_dir = output_dir_for("ga", file_name)
+    logger = setup_logger(out_dir, f"ga_{input_name(file_name)}")
+    logger.info(f"Genetic Algorithm | input={os.path.basename(file_name)} | "
+                f"{len(data.trucks)} truk | {len(data.packages)} paket | "
+                f"mutation_rate={MUTATION_RATE} | elitism={elitism}")
 
     rows = []
     counter = 0
-    for group, pop, gens in build_configs():
-        for run in range(1, args.runs + 1):
-            seed = args.seed + counter
+    for group, population, generations in build_configs():
+        variant = f"{group}_pop{population}_gen{generations}"
+        for run in range(1, runs + 1):
+            seed = base_seed + counter
             counter += 1
-            g, duration, init_s, best_s, best_v, history = genetic_algorithm(
-                truck, packages, population_size=pop, generations=gens,
-                mutation_rate=MUTATION_RATE, elitism=args.elitism, seed=seed)
+            iterations, duration, initial_state, best_state, best_value, history = genetic_algorithm(
+                data.trucks, data.packages, population_size=population,
+                generations=generations, mutation_rate=MUTATION_RATE,
+                elitism=elitism, seed=seed)
 
-            name = f"{group}_pop{pop}_gen{gens}_run{run}"
             record = {
-                "name": name, "group": group, "run": run, "seed": seed,
-                "population_size": pop, "generations": g,
-                "mutation_rate": MUTATION_RATE, "elitism": args.elitism,
+                "algorithm": "Genetic Algorithm",
+                "name": f"{variant}_run{run}",
+                "variant": variant,
+                "input_file": os.path.basename(file_name),
+                "group": group,
+                "run": run,
+                "seed": seed,
                 "duration": duration,
-                "initial_value": init_s.total_value, "final_value": best_v,
+                "iterations": iterations,
+                "initial_value": initial_state.total_value,
+                "final_value": best_value,
+                "population_size": population,
+                "generations": generations,
+                "mutation_rate": MUTATION_RATE,
+                "elitism": elitism,
                 "history": [list(h) for h in history],
-                "initial_state": state_to_json(init_s),
-                "final_state": state_to_json(best_s),
+                "initial_state": initial_state,
+                "final_state": best_state,
             }
-            with open(os.path.join(args.out, name + ".json"), "w") as f:
-                json.dump(record, f, indent=2)
+            save_record(out_dir, record)
+            rows.append(summary_row(record))
+            logger.info(f"{record['name']}: awal={record['initial_value']} akhir={best_value} "
+                        f"durasi={duration:.3f}s")
+    write_summary(out_dir, rows)
+    log_group_statistics(logger, rows)
+    logger.info(f"Output tersimpan di {out_dir}")
+    return rows, out_dir
 
-            rows.append([name, group, pop, g, run, seed, round(duration, 3),
-                         record["initial_value"], best_v])
-            print(f"{name}: awal={record['initial_value']} akhir={best_v} ({duration:.1f}s)")
-
-    with open(os.path.join(args.out, "summary.csv"), "w", newline="") as f:
-        w = csv.writer(f)
-        w.writerow(["name", "group", "population", "generations", "run", "seed",
-                    "duration_s", "initial_value", "final_value"])
-        w.writerows(rows)
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("input", nargs="?")
+    ap.add_argument("--seed", type=int, default=BASE_SEED)
+    ap.add_argument("--runs", type=int, default=3)
+    ap.add_argument("--elitism", action="store_true")
+    args = ap.parse_args()
+    input_file = args.input or input("Masukkan nama file input (json) : ")
+    run_ga_experiment(input_file, args.runs, args.seed, args.elitism)
 
 
 if __name__ == "__main__":

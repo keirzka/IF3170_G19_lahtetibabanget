@@ -12,9 +12,8 @@ from validator import is_fit_in_truck, is_melayang, is_overlap, is_support
 
 
 def clone_state(state):
-    return State(state.truck, [copy.copy(p) for p in state.packages])
+    return State(state.trucks, [copy.copy(p) for p in state.packages])
 
-# Repair
 def _can_add(cand, accepted, weight, truck):
     if weight + cand.weight > truck.max_capacity:
         return False
@@ -25,7 +24,6 @@ def _can_add(cand, accepted, weight, truck):
             return False
     if is_melayang(cand, accepted + [cand]):
         return False
-    # cand tidak boleh bertumpu pada paket pecah belah
     for q in accepted:
         if q.is_fragile and is_support(q, [cand]):
             return False
@@ -33,35 +31,38 @@ def _can_add(cand, accepted, weight, truck):
 
 
 def repair(state):
-    original = [p.position for p in state.packages]
+    original = [(p.position, p.truck_id) for p in state.packages]
     result = [copy.copy(p) for p in state.packages]
     for p in result:
         p.position = None
 
     order = sorted(
-        (i for i, pos in enumerate(original) if pos is not None),
-        key=lambda i: (original[i][2], i),
+        (i for i, (pos, _) in enumerate(original) if pos is not None),
+        key=lambda i: (original[i][0][2], i),
     )
 
-    accepted = []
-    weight = 0
+    accepted = {t: [] for t in range(len(state.trucks))}
+    weight = {t: 0 for t in range(len(state.trucks))}
     for i in order:
+        pos, truck_id = original[i]
+        if truck_id not in accepted:
+            continue
         cand = result[i]
-        cand.position = original[i]
-        if _can_add(cand, accepted, weight, state.truck):
-            accepted.append(cand)
-            weight += cand.weight
+        cand.position = pos
+        cand.truck_id = truck_id
+        if _can_add(cand, accepted[truck_id], weight[truck_id], state.trucks[truck_id]):
+            accepted[truck_id].append(cand)
+            weight[truck_id] += cand.weight
         else:
             cand.position = None
-    return State(state.truck, result)
+    return State(state.trucks, result)
 
-# Operator
 def make_roulette(population, fitness):
     cumulative = list(accumulate(fitness))
     total = cumulative[-1]
 
     def pick():
-        if total <= 0:  # semua individu bernilai 0 -> seleksi seragam
+        if total <= 0:
             return random.choice(population)
         idx = bisect.bisect_right(cumulative, random.uniform(0, total))
         return population[min(idx, len(population) - 1)]
@@ -78,14 +79,13 @@ def crossover(parent_x, parent_y):
         copy.copy(parent_x.packages[i] if i < point else parent_y.packages[i])
         for i in range(n)
     ]
-    return repair(State(parent_x.truck, genes))
+    return repair(State(parent_x.trucks, genes))
 
 
 def mutate(state):
     return get_neighbor(state)
 
-# Algoritma utama
-def genetic_algorithm(truck, packages, population_size=50, generations=100,
+def genetic_algorithm(trucks, packages, population_size=50, generations=100,
                       mutation_rate=0.1, elitism=False, seed=None):
     if population_size < 2:
         raise ValueError("population_size minimal 2")
@@ -96,7 +96,7 @@ def genetic_algorithm(truck, packages, population_size=50, generations=100,
 
     start = time.perf_counter()
 
-    population = [generate(truck, packages) for _ in range(population_size)]
+    population = [generate(trucks, packages) for _ in range(population_size)]
     fitness = [max(0, objective(s)) for s in population]
 
     best_idx = max(range(population_size), key=fitness.__getitem__)

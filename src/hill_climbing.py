@@ -1,158 +1,123 @@
+import time
 from generator import generate
-from models import Package, Truck, State
-from neighbor import get_neighbor_sample
-from objective import objective, INVALID_VALUE
-from time import time 
-from typing import List
-import random
-
-MAXIMUM_SIDEWAYS_MOVE = 100
+from neighbor import get_neighbor_with_info, get_neighbor_sample
+from objective import INVALID_VALUE, objective
 
 MAX_ITERATION = 1000
-
 NUM_NEIGHBOR = 20
+MAXIMUM_SIDEWAYS_MOVE = 100
+MAXIMUM_RESTART = 5
 
-def steepest_ascent(truck : Truck, packages : List[Package], max_iteration = MAX_ITERATION)  :
-    # Inisialisasi state
-    initial_state = generate(truck, packages)
+def get_best_state(states):
+    best, best_value = None, INVALID_VALUE
+    for s in states:
+        score = objective(s)
+        if score > best_value:
+            best, best_value = s, score
+    return best, best_value
 
-    current_state = initial_state
-    current_value = objective(current_state)
+def _result(initial_value, final_state, final_value, iterations, history, start, **extra):
+    result = {
+        "initial_value": initial_value,
+        "final_state": final_state,
+        "final_value": final_value,
+        "iterations": iterations,
+        "history": history,
+        "duration": time.perf_counter() - start,
+    }
+    result.update(extra)
+    return result
 
-    # Mulai timer
-    start_time = time()
+def steepest_ascent(initial_state, max_iteration=MAX_ITERATION, num_neighbor=NUM_NEIGHBOR):
+    start = time.perf_counter()
+    current, current_value = initial_state, objective(initial_state)
+    history = [current_value]
+    iterations = 0
 
-    # Membangkitkan tetangga dan memilih neighbor dengan value >= current state
-    for i in range(max_iteration) : 
-        neighbors = get_neighbor_sample(current_state, n = NUM_NEIGHBOR)
-
-        if not neighbors : break
-
-        best_neighbor, best_neighbor_value = get_best_state(neighbors)
-
-        if(best_neighbor_value <= current_value) :
+    while iterations < max_iteration:
+        iterations += 1
+        neighbors = get_neighbor_sample(current, num_neighbor)
+        if not neighbors:
             break
-
-        current_state = best_neighbor
-        current_value = best_neighbor_value
-
-    end_time = time()
-
-    duration = end_time - start_time
-
-    return i, duration, initial_state, current_state, current_value
-
-
-def sideways_move(truck : Truck, packages : List[Package], max_iteration = MAX_ITERATION, max_sideways_move = MAXIMUM_SIDEWAYS_MOVE) :
-    # Inisialisasi state
-    initial_state = generate(truck, packages)
-
-    current_state = initial_state
-    current_value = objective(current_state)
-
-    sideways_count = 0
-
-    # Mulai timer
-    start_time = time()
-
-    # Membangkitkan tetangga dan memilih neighbor dengan value >= current state
-    for i in range(max_iteration) : 
-        neighbors = get_neighbor_sample(current_state, n = NUM_NEIGHBOR)
-
-        if not neighbors : break
-
-        best_neighbor, best_neighbor_value = get_best_state(neighbors)
-
-        if(best_neighbor_value < current_value) :
+        best, best_value = get_best_state(neighbors)
+        if best_value <= current_value:
             break
+        current, current_value = best, best_value
+        history.append(current_value)
 
-        # Kurangi Jatah Batasan Sideways Move (di shoulder)
-        if(best_neighbor_value == current_value) : 
-            if(sideways_count >= max_sideways_move) :
+    return _result(history[0], current, current_value, iterations, history, start,
+                   max_iteration=max_iteration, num_neighbor=num_neighbor)
+
+def sideways_move(initial_state, max_iteration=MAX_ITERATION,
+                  max_sideways_move=MAXIMUM_SIDEWAYS_MOVE, num_neighbor=NUM_NEIGHBOR):
+    start = time.perf_counter()
+    current, current_value = initial_state, objective(initial_state)
+    history = [current_value]
+    iterations = 0
+    consecutive_sideways = 0
+    total_sideways = 0
+
+    while iterations < max_iteration:
+        iterations += 1
+        neighbors = get_neighbor_sample(current, num_neighbor)
+        if not neighbors:
+            break
+        best, best_value = get_best_state(neighbors)
+        if best_value < current_value:
+            break
+        if best_value == current_value:
+            if consecutive_sideways >= max_sideways_move:
                 break
-                
-            sideways_count += 1
+            consecutive_sideways += 1
+            total_sideways += 1
+        else:
+            consecutive_sideways = 0
+        current, current_value = best, best_value
+        history.append(current_value)
 
-        else : 
-            sideways_count = 0
+    return _result(history[0], current, current_value, iterations, history, start,
+                   max_iteration=max_iteration, num_neighbor=num_neighbor,
+                   max_sideways_move=max_sideways_move, sideways_moves=total_sideways)
 
-        current_state = best_neighbor
-        current_value = best_neighbor_value
+def stochastic(initial_state, max_iteration=MAX_ITERATION):
+    start = time.perf_counter()
+    current, current_value = initial_state, objective(initial_state)
+    history = [current_value]
+    iterations = 0
 
-    end_time = time()
+    while iterations < max_iteration:
+        iterations += 1
+        neighbor, move = get_neighbor_with_info(current)
+        if move is None:
+            break
+        neighbor_value = objective(neighbor)
+        if neighbor_value > current_value:
+            current, current_value = neighbor, neighbor_value
+        history.append(current_value)
 
-    duration = end_time - start_time
+    return _result(history[0], current, current_value, iterations, history, start,
+                   max_iteration=max_iteration)
 
-    return i, duration, initial_state, current_state, current_value
+def random_restart(initial_state, max_restart=MAXIMUM_RESTART, max_iteration=MAX_ITERATION,
+                   num_neighbor=NUM_NEIGHBOR):
+    start = time.perf_counter()
+    best, best_value = None, INVALID_VALUE
+    history = []
+    iterations_per_restart = []
+    value_per_restart = []
 
-def random_restart(truck : Truck, packages : List[Package], max_restart) : 
-    total_iteration = 0
-    initial_state = None
+    state = initial_state
+    for attempt in range(max_restart + 1):
+        if attempt > 0:
+            state = generate(initial_state.trucks, initial_state.packages)
+        result = steepest_ascent(state, max_iteration, num_neighbor)
+        iterations_per_restart.append(result["iterations"])
+        value_per_restart.append(result["final_value"])
+        history.extend(result["history"])
+        if result["final_value"] > best_value:
+            best, best_value = result["final_state"], result["final_value"]
 
-    best_state = None
-    best_value = INVALID_VALUE
-
-    start_time = time()
-
-    for i in range(max_restart) :
-        it, _, init, finding, finding_value = steepest_ascent(truck, packages) 
-
-        total_iteration += it
-
-        if(not initial_state) : 
-            initial_state = init
-
-        if(finding_value > best_value) :
-            best_state = finding
-            best_value = finding_value
-
-    end_time = time()
-
-    duration = end_time - start_time
-
-    return total_iteration, duration, initial_state, best_state, best_value
-    
-def stochastic(truck : Truck, packages : List[Package], max_iteration = MAX_ITERATION) : 
-    # Inisialisasi state
-    initial_state = generate(truck, packages)
-
-    current_state = initial_state
-    current_value = objective(current_state)
-
-    # Mulai timer
-    start_time = time()
-
-    for i in range(max_iteration) : 
-        neighbors = get_neighbor_sample(current_state, n = NUM_NEIGHBOR)
-
-        if(not neighbors) : break
-
-        random_neighbor = random.choice(neighbors)
-
-        if(not random_neighbor) : break
-
-        random_neighbor_value = objective(random_neighbor)
-
-        # Ganti current state kalau neighbor random lebih baik
-        if(random_neighbor_value > current_value) :
-            current_state =  random_neighbor
-            current_value = random_neighbor_value
-
-    end_time = time()
-
-    duration = end_time - start_time
-
-    return i, duration, initial_state, current_state, current_value
-
-
-# Helper : Get best State
-def get_best_state(states : List[State]) :
-        best = None
-        best_value = INVALID_VALUE
-        for s in states : 
-            score = objective(s)
-            if(score > best_value) : 
-                best = s
-                best_value = score
-
-        return best, best_value
+    return _result(objective(initial_state), best, best_value, sum(iterations_per_restart),
+                   history, start, max_restart=max_restart, restarts=max_restart,
+                   iterations_per_restart=iterations_per_restart,
+                   value_per_restart=value_per_restart, num_neighbor=num_neighbor)
