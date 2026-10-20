@@ -4,20 +4,25 @@ Implementasi Algoritma Local Search pada Penyusunan Konfigurasi Paket di dalam T
 
 ## Deskripsi
 
-Program ini mencari konfigurasi pengisian paket di dalam truk yang memaksimalkan total value paket yang diangkut, dengan constraint
+Program ini mencari konfigurasi pengisian paket ke dalam satu atau beberapa truk yang memaksimalkan total value paket yang diangkut, dengan constraint
 
 - paket tidak boleh melayang dan tidak boleh menembus dinding peti kemas,
 - paket tidak boleh saling tumpang tindih,
 - paket pecah belah (*fragile*) tidak boleh menjadi penopang paket lain, dan
-- total berat paket tidak boleh melebihi kapasitas truk.
+- total berat paket di setiap truk tidak boleh melebihi kapasitas truk tersebut.
 
 Algoritma *local search* yang diimplementasikan yaitu
 
-1. **Hill-Climbing**
+1. **Hill-Climbing**: Steepest Ascent, Sideways Move, Stochastic, dan Random Restart
 2. **Simulated Annealing**
 3. **Genetic Algorithm**
 
-Setiap state dapat berpindah ke neighbor melalui tiga jenis langkah yaitu menukar posisi dua paket (*swap*), memindahkan paket ke koordinat lain (*move*), dan merotasi paket 90° terhadap sumbu x, y, atau z (*rotate*).
+Setiap state dapat berpindah ke neighbor melalui tiga jenis langkah yaitu menukar posisi dua paket (*swap*), memindahkan paket ke koordinat lain atau ke truk lain (*move*), dan merotasi paket 90° terhadap sumbu x, y, atau z (*rotate*).
+
+Spesifikasi bonus yang dikerjakan:
+
+- seluruh varian Hill-Climbing (Steepest Ascent, Sideways Move, Stochastic, Random Restart);
+- multi-truk: program menerima lebih dari satu truk dan memaksimalkan total value yang diangkut seluruh armada.
 
 ## Struktur Repository
 
@@ -25,6 +30,10 @@ Setiap state dapat berpindah ke neighbor melalui tiga jenis langkah yaitu menuka
 IF3170_G19_lahtetibabanget/
 ├── docs/
 ├── output/
+│   ├── hc/<nama_input>/
+│   ├── sa/<nama_input>/
+│   ├── ga/<nama_input>/
+│   └── perbandingan_<nama_input>.png
 ├── src/
 │   ├── data/
 │   ├── models.py
@@ -32,16 +41,17 @@ IF3170_G19_lahtetibabanget/
 │   ├── validator.py
 │   ├── objective.py
 │   ├── generator.py
-│   ├── neighbor.py=
+│   ├── neighbor.py
 │   ├── hill_climbing.py
 │   ├── simulated_annealing.py
 │   ├── genetic.py
 │   ├── experiment_runner.py
 │   ├── experiment_hill_climbing.py
-│   ├── main_sa.py
-│   ├── experiment_ga.py 
+│   ├── experiment_sa.py
+│   ├── experiment_ga.py
 │   ├── visualisasi.py
 │   └── main.py
+├── Makefile
 ├── requirements.txt
 └── README.md
 ```
@@ -52,19 +62,21 @@ IF3170_G19_lahtetibabanget/
 2. Clone repository dan masuk ke foldernya
 
 ```bash
-   git clone https://github.com/<username>/IF3170_G19_lahtetibabanget.git
-   cd IF3170_G19_lahtetibabanget
+git clone https://github.com/<username>/IF3170_G19_lahtetibabanget.git
+cd IF3170_G19_lahtetibabanget
 ```
 
-3. Pasang dependensi:
+3. Pasang dependensi
 
 ```bash
-   pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Format Input
 
-File input berbentuk JSON dan diletakkan di folder `src/data/`. Contoh:
+File input berbentuk JSON dan diletakkan di folder `src/data/`.
+
+Satu truk:
 
 ```json
 {
@@ -76,63 +88,91 @@ File input berbentuk JSON dan diletakkan di folder `src/data/`. Contoh:
 }
 ```
 
-Test case yang dipakai pada eksperimen: 
+Beberapa truk (bonus multi-truk), gunakan key `Trucks` berisi daftar truk:
+
+```json
+{
+  "Trucks": [
+    {"width": 10, "length": 20, "height": 5, "max_capacity": 500},
+    {"width": 8, "length": 12, "height": 5, "max_capacity": 300}
+  ],
+  "Package": [ ... ]
+}
+```
+
+Input yang dipakai pada eksperimen:
+
+| File | Keterangan |
+|---|---|
+| `dataset_n30.json` | 30 paket, 1 truk 10 × 20 × 5 dengan kapasitas 500 (eksperimen utama) |
+| `dataset_n30_multitruck.json` | 30 paket yang sama, 2 truk (10 × 20 × 5 kapasitas 500 dan 8 × 12 × 5 kapasitas 300) |
 
 ## Cara Menjalankan
 
-**Semua perintah dijalankan dari dalam folder `src/`**, karena program membaca file input dari `./data/`.
+Semua perintah dijalankan dari dalam folder `src/`.
 
 ```bash
 cd src
 ```
 
-### Hill-Climbing
+### Menu utama
 
 ```bash
-python experiment_hill_climbing.py
+python main.py
 ```
 
-Masukkan nama file input saat diminta, misalnya `test1_hill_climbing.json`. Program menjalankan seluruh varian Hill-Climbing dan menampilkan nilai objective awal dan akhir, banyak iterasi, durasi, serta utilisasi ruang.
+Masukkan nama file input (default `dataset_n30.json`), lalu pilih menu untuk menampilkan initial state, menjalankan eksperimen tiap algoritma, menjalankan semua eksperimen sekaligus, atau membuat visualisasi.
 
-### Simulated Annealing
+### Menjalankan eksperimen secara langsung
 
 ```bash
-python main_sa.py test1_hill_climbing.json
+python experiment_hill_climbing.py dataset_n30.json
+python experiment_sa.py dataset_n30.json
+python experiment_ga.py dataset_n30.json
 ```
 
-Simulated Annealing dijalankan tiga kali (seed 1, 2, 3). Hasil tersimpan di `output/SA_<nama_test_case>_<timestamp>/`:
+| Algoritma | Run | Parameter |
+|---|---|---|
+| Hill-Climbing | 4 varian × 3 run (seed 1, 2, 3) | maksimum iterasi 1000, 20 neighbor per iterasi (Steepest Ascent, Sideways Move, Random Restart), maksimum sideways move berturut-turut 100, maksimum restart 5 |
+| Simulated Annealing | 3 run (seed 1, 2, 3) | INITPROB 0,4, TEMPFACTOR 0,95, SIZEFACTOR 16, MINPERCENT 2% |
+| Genetic Algorithm | 18 run (seed 1000–1017) | variasi iterasi 100/300/500 dengan populasi 100, variasi populasi 50/100/200 dengan 300 iterasi, mutation rate 0,1. Opsi: `--runs`, `--seed`, `--elitism` |
 
-- `experiment.log`, `summary.json`, `summary.csv`: log dan ringkasan ketiga run
-- `comparison_plot.png`: perbandingan nilai objective ketiga run
-- `run_<k>/initial_state.json`, `run_<k>/final_state.json`: state awal dan akhir
-- `run_<k>/result.json`: nilai akhir, durasi, banyak iterasi, frekuensi stuck, dan parameter
-- `run_<k>/objective_plot.png`: plot nilai objective terhadap iterasi
-- `run_<k>/acceptance_prob_plot.png`: plot e^(ΔE/T) terhadap iterasi
-- `run_<k>/record.json`: data run untuk visualisasi 3D
+Setiap run disimpan sebagai satu file JSON di `output/<algoritma>/<nama_input>/` berisi state awal dan akhir, nilai objective awal dan akhir, banyak iterasi, durasi, riwayat nilai objective, serta informasi khusus tiap algoritma:
 
-### Genetic Algorithm
+- Hill-Climbing Sideways Move: maksimum sideways move dan banyak sideways move yang dilakukan
+- Hill-Climbing Random Restart: maksimum restart, banyak restart, banyak iterasi tiap restart
+- Simulated Annealing: riwayat e^(ΔE/T), frekuensi stuck, temperatur awal
+- Genetic Algorithm: jumlah populasi, banyak generasi, riwayat nilai maksimum dan rata-rata populasi
 
-```bash
-python experiment_ga.py data/test1_hill_climbing.json
-```
-
-Opsi tambahan: `--seed <angka>` (seed dasar, default 1000), `--runs <angka>` (default 3), dan `--elitism`.
-Program menjalankan tiga variasi banyak iterasi (populasi dikontrol) dan tiga variasi jumlah populasi (iterasi dikontrol), masing-masing tiga kali. Hasil tersimpan di `output/ga/`.
+Setiap folder juga berisi `summary.csv` (ringkasan seluruh run) dan `experiment.log`.
 
 ### Visualisasi
 
-Visualisasi 3D state awal dan akhir serta plot riwayat nilai objective untuk satu run:
-
 ```bash
-python -c "from visualisasi import visualize_run; visualize_run('../output/ga/<nama_run>.json')"
+python visualisasi.py
+python visualisasi.py --compare dataset_n30
 ```
 
-Untuk hasil Simulated Annealing, gunakan file `record.json` di folder run yang bersangkutan, misalnya `../output/SA_test1_hill_climbing_<timestamp>/run_1/record.json`.
+Perintah pertama membuat gambar untuk seluruh hasil di folder `output/` ke subfolder `gambar/` masing-masing:
+
+- `<run>_awal.png` dan `<run>_akhir.png`: visualisasi 3D state awal dan akhir, termasuk paket di luar truk
+- `<run>_objective.png`: plot nilai objective terhadap iterasi (Genetic Algorithm: nilai maksimum dan rata-rata populasi)
+- `<run>_probabilitas.png`: plot e^(ΔE/T) terhadap iterasi (khusus Simulated Annealing)
+- `ringkasan_ga.png`: pengaruh banyak iterasi dan jumlah populasi pada Genetic Algorithm
+
+Perintah kedua membuat `output/perbandingan_dataset_n30.png` berisi perbandingan rata-rata nilai akhir dan durasi seluruh algoritma.
+
+### Makefile (Linux/macOS)
+
+```bash
+make all
+make all INPUT=dataset_n30_multitruck.json
+```
 
 ## Pembagian Tugas
 
 | Anggota | NIM | Tugas |
 |---|---|---|
 | Keisha Rizka Syofyani | 13524073 | Model data, parser input, constraint validator, objective function, generator initial state, Hill-Climbing beserta eksperimennya, setup repository. Laporan: cover, deskripsi persoalan, representasi state dan objective function, bagian Hill-Climbing, referensi, kompilasi dan format akhir |
-| Helena Kristela Sarhawa | 13524109 | Fungsi neighbor, Simulated Annealing beserta eksperimennya, experiment runner dan logger, README. Laporan: bagian neighbor dan Simulated Annealing, analisis perbandingan antaralgoritma |
+| Helena Kristela Sarhawa | 13524109 | Fungsi neighbor, Simulated Annealing beserta eksperimennya, experiment runner dan logger, bonus multi-truk, README. Laporan: bagian neighbor dan Simulated Annealing, analisis perbandingan antaralgoritma |
 | Vara Azzara Ramli Pulukadang | 13524091 | Genetic Algorithm beserta eksperimennya, visualisasi 3D dan plot hasil eksperimen. Laporan: bagian Genetic Algorithm, analisis pengaruh iterasi dan populasi, bagian visualisasi, pembagian tugas, kesimpulan dan saran |
