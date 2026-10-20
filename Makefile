@@ -1,65 +1,74 @@
-# Pengujian dan eksperimen Genetic Algorithm. Jalankan `make` dari root repo.
-# Semua skrip Python dijalankan dari src/ karena io_handler membaca ./data/.
-#
-#   make dataset      buat dataset uji 10 dan 30 paket (seed tetap 2026)
-#   make test         pengujian otomatis GA (tanpa menulis file)
-#   make smoke        uji alur penuh dengan data kecil -> output/ga_smoke (jangan di-commit)
-#   make experiment   18 run GA pada 30 paket -> output/ga
-#   make viz          gambar state dan plot dari hasil eksperimen
-#
-# Variabel: PYTHON=python3 | RUN=nama_folder_output | ARGS="--elitism"
-#   contoh: make experiment RUN=ga_elitism ARGS=--elitism && make viz RUN=ga_elitism
-
 PYTHON ?= python
 SRC    := src
 OUT    := output
-RUN    ?= ga
-ARGS   ?=
 
 .DEFAULT_GOAL := help
-.PHONY: help deps dataset test smoke experiment viz clean-smoke
+.PHONY: help deps dataset run-hc run-sa run-ga run-all viz clean
 
 help:
-	@echo "make deps        pasang matplotlib"
-	@echo "make dataset     buat src/data/dataset_n10.json dan dataset_n30.json"
-	@echo "make test        pengujian otomatis GA"
-	@echo "make smoke       uji alur penuh (data kecil) -> $(OUT)/ga_smoke"
-	@echo "make experiment  18 run GA pada 30 paket -> $(OUT)/$(RUN)"
-	@echo "make viz         gambar dari $(OUT)/$(RUN) -> $(OUT)/viz_$(RUN)"
-	@echo "make clean-smoke hapus hasil smoke"
+	@echo "Perintah yang tersedia:"
+	@echo "  make deps        : Pasang dependencies (matplotlib)"
+	@echo "  make dataset     : Buat dataset (n=10 dan n=30) di folder src/data"
+	@echo "  make run-hc      : Jalankan eksperimen Hill Climbing"
+	@echo "  make run-sa      : Jalankan eksperimen Simulated Annealing"
+	@echo "  make run-ga      : Jalankan eksperimen Genetic Algorithm"
+	@echo "  make run-all     : Jalankan semua eksperimen"
+	@echo "  make viz         : Render grafik dan 3D dari hasil eksperimen di output/"
+	@echo "  make clean       : Hapus semua file di folder output/"
 
 deps:
-	$(PYTHON) -m pip install matplotlib
+	$(PYTHON) -m pip install -r requirements.txt
 
 dataset:
-	cd $(SRC)/data && $(PYTHON) generate_dataset.py --n 10 --seed 2026
-	cd $(SRC)/data && $(PYTHON) generate_dataset.py --n 30 --seed 2026
+	cd $(SRC)/data &&$(PYTHON) generate_dataset.py --n 10 --seed 2026
+	cd $(SRC)/data &&$(PYTHON) generate_dataset.py --n 30 --seed 2026
 
-test:
-	cd $(SRC) && $(PYTHON) test_ga.py
+# Menjalankan Eksperimen Masing-Masing
+run-hc:
+	cd $(SRC) &&$(PYTHON) experiment_hill_climbing.py
 
-smoke:
-	cd $(SRC) && $(PYTHON) experiment_ga.py data/dataset_n10.json --out ../$(OUT)/ga_smoke
-	$(MAKE) viz RUN=ga_smoke
+run-sa:
+	cd $(SRC) &&$(PYTHON) experiment_sa.py
 
-experiment:
-	cd $(SRC) && $(PYTHON) experiment_ga.py data/dataset_n30.json --out ../$(OUT)/$(RUN) $(ARGS)
+run-ga:
+	cd $(SRC) &&$(PYTHON) experiment_ga.py data/dataset_n30.json
 
+run-all: run-hc run-sa run-ga
+
+# Skrip Visualisasi Python In-line
 define VIZ_PY
 import glob, os, sys
 import matplotlib
 matplotlib.use("Agg")
 import visualisasi as v
+
 src, dst = sys.argv[1], sys.argv[2]
-print(v.plot_experiment_summary(v.load_records(src), os.path.join(dst, "ringkasan_ga.png")))
-for f in sorted(glob.glob(os.path.join(src, "*_run*.json"))):
+os.makedirs(dst, exist_ok=True)
+
+print(f"\nMemproses visualisasi folder: {src} ...")
+# Render grafik summary khusus GA jika ada (tidak error jika tidak ada file)
+records = v.load_records(src)
+if any("population_size" in r for r in records):
+    try:
+        v.plot_experiment_summary(records, os.path.join(dst, "summary_ga.png"))
+        print("-> Render summary GA selesai")
+    except Exception as e:
+        print(f"-> Gagal render summary GA: {e}")
+
+# Render state 3D dan plot spesifik per algoritma
+for f in sorted(glob.glob(os.path.join(src, "*.json"))):
     for p in v.visualize_run(f, dst):
-        print(p)
+        pass
+print(f"-> Visualisasi selesai! Tersimpan di {dst}")
 endef
 export VIZ_PY
 
 viz:
-	cd $(SRC) && $(PYTHON) -c "$$VIZ_PY" ../$(OUT)/$(RUN) ../$(OUT)/viz_$(RUN)
+	@for algo in hc sa ga; do \
+		if [ -d "$(OUT)/$$algo" ]; then \
+			(cd $(SRC) && $(PYTHON) -c "$$VIZ_PY" ../$(OUT)/$$algo ../$(OUT)/viz_$$algo); \
+		fi \
+	done
 
-clean-smoke:
-	rm -rf $(OUT)/ga_smoke $(OUT)/viz_ga_smoke
+clean:
+	rm -rf $(OUT)/hc$(OUT)/sa $(OUT)/ga$(OUT)/viz_hc $(OUT)/viz_sa$(OUT)/viz_ga
