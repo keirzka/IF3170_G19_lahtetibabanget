@@ -1,0 +1,26 @@
+07:58:41 | Genetic Algorithm | input=dataset_n30_multitruck.json | 2 truk | 30 paket | mutation_rate=0.1 | elitism=False
+07:58:42 | iterasi_pop100_gen100_run1: awal=2847 akhir=3176 durasi=1.824s
+07:58:46 | iterasi_pop100_gen100_run2: awal=3010 akhir=3551 durasi=3.633s
+07:58:51 | iterasi_pop100_gen100_run3: awal=2819 akhir=3708 durasi=5.106s
+07:59:02 | iterasi_pop100_gen300_run1: awal=3106 akhir=3826 durasi=10.756s
+07:59:08 | iterasi_pop100_gen300_run2: awal=2939 akhir=4053 durasi=6.591s
+07:59:14 | iterasi_pop100_gen300_run3: awal=2886 akhir=4305 durasi=5.386s
+07:59:26 | iterasi_pop100_gen500_run1: awal=3166 akhir=4418 durasi=11.908s
+07:59:38 | iterasi_pop100_gen500_run2: awal=3034 akhir=4231 durasi=12.212s
+07:59:49 | iterasi_pop100_gen500_run3: awal=2980 akhir=4438 durasi=10.761s
+07:59:52 | populasi_pop50_gen300_run1: awal=2956 akhir=3489 durasi=3.521s
+07:59:55 | populasi_pop50_gen300_run2: awal=2747 akhir=3642 durasi=3.043s
+07:59:59 | populasi_pop50_gen300_run3: awal=3288 akhir=4467 durasi=3.364s
+08:00:05 | populasi_pop100_gen300_run1: awal=3320 akhir=4267 durasi=6.601s
+08:00:12 | populasi_pop100_gen300_run2: awal=2966 akhir=3700 durasi=7.168s
+08:00:21 | populasi_pop100_gen300_run3: awal=3180 akhir=3827 durasi=8.147s
+08:00:37 | populasi_pop200_gen300_run1: awal=3088 akhir=4482 durasi=16.326s
+08:00:54 | populasi_pop200_gen300_run2: awal=3107 akhir=4898 durasi=17.448s
+08:01:13 | populasi_pop200_gen300_run3: awal=2982 akhir=4712 durasi=18.441s
+08:01:13 | iterasi_pop100_gen100: rata-rata nilai akhir=3478.33 std=223.18 rata-rata durasi=3.521s
+08:01:13 | iterasi_pop100_gen300: rata-rata nilai akhir=4061.33 std=195.64 rata-rata durasi=7.578s
+08:01:13 | iterasi_pop100_gen500: rata-rata nilai akhir=4362.33 std=93.22 rata-rata durasi=11.627s
+08:01:13 | populasi_pop50_gen300: rata-rata nilai akhir=3866.00 std=429.54 rata-rata durasi=3.309s
+08:01:13 | populasi_pop100_gen300: rata-rata nilai akhir=3931.33 std=242.95 rata-rata durasi=7.305s
+08:01:13 | populasi_pop200_gen300: rata-rata nilai akhir=4697.33 std=170.15 rata-rata durasi=17.405s
+08:01:13 | Output tersimpan di C:\Users\user\Documents\SEM 5\AI\IF3170_G19_lahtetibabanget\src\..\output\ga\dataset_n30_multitruck

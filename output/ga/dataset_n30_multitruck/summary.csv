@@ -1,0 +1,19 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,group,population_size,generations,mutation_rate,elitism
+iterasi_pop100_gen100_run1,iterasi_pop100_gen100,1,1000,2847,3176,100,1.8239505999954417,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,100,0.1,False
+iterasi_pop100_gen100_run2,iterasi_pop100_gen100,2,1001,3010,3551,100,3.6328725999919698,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,100,0.1,False
+iterasi_pop100_gen100_run3,iterasi_pop100_gen100,3,1002,2819,3708,100,5.105816700001014,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,100,0.1,False
+iterasi_pop100_gen300_run1,iterasi_pop100_gen300,1,1003,3106,3826,300,10.756134700000985,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,300,0.1,False
+iterasi_pop100_gen300_run2,iterasi_pop100_gen300,2,1004,2939,4053,300,6.59067689999938,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,300,0.1,False
+iterasi_pop100_gen300_run3,iterasi_pop100_gen300,3,1005,2886,4305,300,5.386145900003612,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,300,0.1,False
+iterasi_pop100_gen500_run1,iterasi_pop100_gen500,1,1006,3166,4418,500,11.907811100012623,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,500,0.1,False
+iterasi_pop100_gen500_run2,iterasi_pop100_gen500,2,1007,3034,4231,500,12.211888199992245,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,500,0.1,False
+iterasi_pop100_gen500_run3,iterasi_pop100_gen500,3,1008,2980,4438,500,10.761174000013852,Genetic Algorithm,dataset_n30_multitruck.json,iterasi,100,500,0.1,False
+populasi_pop50_gen300_run1,populasi_pop50_gen300,1,1009,2956,3489,300,3.5212117999908514,Genetic Algorithm,dataset_n30_multitruck.json,populasi,50,300,0.1,False
+populasi_pop50_gen300_run2,populasi_pop50_gen300,2,1010,2747,3642,300,3.0433259999845177,Genetic Algorithm,dataset_n30_multitruck.json,populasi,50,300,0.1,False
+populasi_pop50_gen300_run3,populasi_pop50_gen300,3,1011,3288,4467,300,3.363769299990963,Genetic Algorithm,dataset_n30_multitruck.json,populasi,50,300,0.1,False
+populasi_pop100_gen300_run1,populasi_pop100_gen300,1,1012,3320,4267,300,6.601429100002861,Genetic Algorithm,dataset_n30_multitruck.json,populasi,100,300,0.1,False
+populasi_pop100_gen300_run2,populasi_pop100_gen300,2,1013,2966,3700,300,7.16752550000092,Genetic Algorithm,dataset_n30_multitruck.json,populasi,100,300,0.1,False
+populasi_pop100_gen300_run3,populasi_pop100_gen300,3,1014,3180,3827,300,8.146959099976812,Genetic Algorithm,dataset_n30_multitruck.json,populasi,100,300,0.1,False
+populasi_pop200_gen300_run1,populasi_pop200_gen300,1,1015,3088,4482,300,16.325758699997095,Genetic Algorithm,dataset_n30_multitruck.json,populasi,200,300,0.1,False
+populasi_pop200_gen300_run2,populasi_pop200_gen300,2,1016,3107,4898,300,17.44789650000166,Genetic Algorithm,dataset_n30_multitruck.json,populasi,200,300,0.1,False
+populasi_pop200_gen300_run3,populasi_pop200_gen300,3,1017,2982,4712,300,18.440973099990515,Genetic Algorithm,dataset_n30_multitruck.json,populasi,200,300,0.1,False

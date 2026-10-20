@@ -1,0 +1,21 @@
+07:57:28 | Steepest Ascent Hill-Climbing | input=dataset_n30_multitruck.json | 2 truk | 30 paket | seed=[1, 2, 3]
+07:57:28 | steepest_ascent_run1: awal=2201 akhir=4115 iterasi=16 durasi=0.128s
+07:57:28 | steepest_ascent_run2: awal=1211 akhir=3004 iterasi=11 durasi=0.050s
+07:57:28 | steepest_ascent_run3: awal=1779 akhir=4102 iterasi=14 durasi=0.093s
+07:57:28 | Hill-Climbing with Sideways Move | input=dataset_n30_multitruck.json | 2 truk | 30 paket | seed=[1, 2, 3]
+07:57:32 | sideways_move_run1: awal=2201 akhir=5589 iterasi=227 durasi=3.479s
+07:57:37 | sideways_move_run2: awal=1211 akhir=5710 iterasi=401 durasi=5.544s
+07:57:40 | sideways_move_run3: awal=1779 akhir=5096 iterasi=179 durasi=2.673s
+07:57:40 | Stochastic Hill-Climbing | input=dataset_n30_multitruck.json | 2 truk | 30 paket | seed=[1, 2, 3]
+07:57:41 | stochastic_run1: awal=2201 akhir=4794 iterasi=1000 durasi=0.644s
+07:57:41 | stochastic_run2: awal=1211 akhir=4317 iterasi=1000 durasi=0.577s
+07:57:42 | stochastic_run3: awal=1779 akhir=3605 iterasi=1000 durasi=0.456s
+07:57:42 | Random Restart Hill-Climbing | input=dataset_n30_multitruck.json | 2 truk | 30 paket | seed=[1, 2, 3]
+07:57:42 | random_restart_run1: awal=2201 akhir=4441 iterasi=71 durasi=0.422s
+07:57:42 | random_restart_run2: awal=1211 akhir=4132 iterasi=55 durasi=0.331s
+07:57:43 | random_restart_run3: awal=1779 akhir=5278 iterasi=56 durasi=0.301s
+07:57:43 | steepest_ascent: rata-rata nilai akhir=3740.33 std=520.69 rata-rata durasi=0.091s
+07:57:43 | sideways_move: rata-rata nilai akhir=5465.00 std=265.56 rata-rata durasi=3.899s
+07:57:43 | stochastic: rata-rata nilai akhir=4238.67 std=488.56 rata-rata durasi=0.559s
+07:57:43 | random_restart: rata-rata nilai akhir=4617.00 std=484.12 rata-rata durasi=0.352s
+07:57:43 | Output tersimpan di C:\Users\user\Documents\SEM 5\AI\IF3170_G19_lahtetibabanget\src\..\output\hc\dataset_n30_multitruck

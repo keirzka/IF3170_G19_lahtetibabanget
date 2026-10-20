@@ -1,0 +1,6 @@
+07:57:43 | Simulated Annealing | input=dataset_n30_multitruck.json | 2 truk | 30 paket | seed=[1, 2, 3]
+07:57:57 | sa_run1: awal=2201 akhir=6706 iterasi=25440 durasi=13.671s
+07:58:15 | sa_run2: awal=1211 akhir=6198 iterasi=25440 durasi=18.080s
+07:58:40 | sa_run3: awal=1779 akhir=6820 iterasi=24000 durasi=25.544s
+07:58:40 | sa: rata-rata nilai akhir=6574.67 std=270.38 rata-rata durasi=19.098s
+07:58:40 | Output tersimpan di C:\Users\user\Documents\SEM 5\AI\IF3170_G19_lahtetibabanget\src\..\output\sa\dataset_n30_multitruck

@@ -1,0 +1,4 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,best_value,stuck_count,temperatures,accepted_moves,stopped_by,T0,temp_factor,temp_length,init_prob,min_percent
+sa_run1,sa,1,1,2201,6706,25440,13.670654899993679,Simulated Annealing,dataset_n30_multitruck.json,6729,40,53,18198,frozen,185.47135683272248,0.95,480,0.4,0.02
+sa_run2,sa,2,2,1211,6198,25440,18.08013210000354,Simulated Annealing,dataset_n30_multitruck.json,6292,41,53,17238,frozen,117.92111973501089,0.95,480,0.4,0.02
+sa_run3,sa,3,3,1779,6820,24000,25.544418899982702,Simulated Annealing,dataset_n30_multitruck.json,6841,34,50,15974,frozen,113.44138490112564,0.95,480,0.4,0.02

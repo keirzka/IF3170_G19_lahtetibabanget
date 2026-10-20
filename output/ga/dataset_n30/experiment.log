@@ -1,0 +1,26 @@
+07:54:38 | Genetic Algorithm | input=dataset_n30.json | 1 truk | 30 paket | mutation_rate=0.1 | elitism=False
+07:54:40 | iterasi_pop100_gen100_run1: awal=2665 akhir=3060 durasi=2.128s
+07:54:43 | iterasi_pop100_gen100_run2: awal=2398 akhir=2975 durasi=2.769s
+07:54:46 | iterasi_pop100_gen100_run3: awal=2727 akhir=2744 durasi=2.950s
+07:54:55 | iterasi_pop100_gen300_run1: awal=2492 akhir=3345 durasi=9.513s
+07:55:07 | iterasi_pop100_gen300_run2: awal=2873 akhir=3971 durasi=11.595s
+07:55:16 | iterasi_pop100_gen300_run3: awal=2535 akhir=3669 durasi=8.839s
+07:55:29 | iterasi_pop100_gen500_run1: awal=2754 akhir=3041 durasi=13.397s
+07:55:46 | iterasi_pop100_gen500_run2: awal=2498 akhir=4298 durasi=16.971s
+07:56:03 | iterasi_pop100_gen500_run3: awal=2716 akhir=3265 durasi=16.420s
+07:56:07 | populasi_pop50_gen300_run1: awal=2406 akhir=3073 durasi=3.953s
+07:56:11 | populasi_pop50_gen300_run2: awal=2554 akhir=3155 durasi=4.620s
+07:56:16 | populasi_pop50_gen300_run3: awal=2363 akhir=3456 durasi=4.576s
+07:56:25 | populasi_pop100_gen300_run1: awal=2776 akhir=3273 durasi=9.131s
+07:56:33 | populasi_pop100_gen300_run2: awal=2373 akhir=3577 durasi=7.983s
+07:56:42 | populasi_pop100_gen300_run3: awal=2617 akhir=3720 durasi=8.640s
+07:56:57 | populasi_pop200_gen300_run1: awal=3226 akhir=3485 durasi=15.606s
+07:57:11 | populasi_pop200_gen300_run2: awal=2842 akhir=3654 durasi=13.969s
+07:57:28 | populasi_pop200_gen300_run3: awal=2918 akhir=3688 durasi=16.442s
+07:57:28 | iterasi_pop100_gen100: rata-rata nilai akhir=2926.33 std=133.52 rata-rata durasi=2.616s
+07:57:28 | iterasi_pop100_gen300: rata-rata nilai akhir=3661.67 std=255.62 rata-rata durasi=9.983s
+07:57:28 | iterasi_pop100_gen500: rata-rata nilai akhir=3534.67 std=547.45 rata-rata durasi=15.596s
+07:57:28 | populasi_pop50_gen300: rata-rata nilai akhir=3228.00 std=164.66 rata-rata durasi=4.383s
+07:57:28 | populasi_pop100_gen300: rata-rata nilai akhir=3523.33 std=186.39 rata-rata durasi=8.585s
+07:57:28 | populasi_pop200_gen300: rata-rata nilai akhir=3609.00 std=88.77 rata-rata durasi=15.339s
+07:57:28 | Output tersimpan di C:\Users\user\Documents\SEM 5\AI\IF3170_G19_lahtetibabanget\src\..\output\ga\dataset_n30

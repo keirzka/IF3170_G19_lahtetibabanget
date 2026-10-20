@@ -1,0 +1,13 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,max_iteration,num_neighbor,max_sideways_move,sideways_moves,max_restart,restarts
+steepest_ascent_run1,steepest_ascent,1,1,2201,4115,16,0.12846569999237545,Steepest Ascent Hill-Climbing,dataset_n30_multitruck.json,1000,20,,,,
+steepest_ascent_run2,steepest_ascent,2,2,1211,3004,11,0.050424300017766654,Steepest Ascent Hill-Climbing,dataset_n30_multitruck.json,1000,20,,,,
+steepest_ascent_run3,steepest_ascent,3,3,1779,4102,14,0.09269059999496676,Steepest Ascent Hill-Climbing,dataset_n30_multitruck.json,1000,20,,,,
+sideways_move_run1,sideways_move,1,1,2201,5589,227,3.479175100015709,Hill-Climbing with Sideways Move,dataset_n30_multitruck.json,1000,20,100,197,,
+sideways_move_run2,sideways_move,2,2,1211,5710,401,5.544212600012543,Hill-Climbing with Sideways Move,dataset_n30_multitruck.json,1000,20,100,367,,
+sideways_move_run3,sideways_move,3,3,1779,5096,179,2.6731021000014152,Hill-Climbing with Sideways Move,dataset_n30_multitruck.json,1000,20,100,154,,
+stochastic_run1,stochastic,1,1,2201,4794,1000,0.6435678999987431,Stochastic Hill-Climbing,dataset_n30_multitruck.json,1000,,,,,
+stochastic_run2,stochastic,2,2,1211,4317,1000,0.5769202999945264,Stochastic Hill-Climbing,dataset_n30_multitruck.json,1000,,,,,
+stochastic_run3,stochastic,3,3,1779,3605,1000,0.45618050001212396,Stochastic Hill-Climbing,dataset_n30_multitruck.json,1000,,,,,
+random_restart_run1,random_restart,1,1,2201,4441,71,0.422491400007857,Random Restart Hill-Climbing,dataset_n30_multitruck.json,,20,,,5,5
+random_restart_run2,random_restart,2,2,1211,4132,55,0.33135049999691546,Random Restart Hill-Climbing,dataset_n30_multitruck.json,,20,,,5,5
+random_restart_run3,random_restart,3,3,1779,5278,56,0.3008202000055462,Random Restart Hill-Climbing,dataset_n30_multitruck.json,,20,,,5,5

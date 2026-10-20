@@ -1,0 +1,13 @@
+name,variant,run,seed,initial_value,final_value,iterations,duration,algorithm,input_file,max_iteration,num_neighbor,max_sideways_move,sideways_moves,max_restart,restarts
+steepest_ascent_run1,steepest_ascent,1,1,1511,2227,5,0.036091299989493564,Steepest Ascent Hill-Climbing,dataset_n30.json,1000,20,,,,
+steepest_ascent_run2,steepest_ascent,2,2,1653,1903,2,0.012802900018868968,Steepest Ascent Hill-Climbing,dataset_n30.json,1000,20,,,,
+steepest_ascent_run3,steepest_ascent,3,3,1797,2747,11,0.1016624000039883,Steepest Ascent Hill-Climbing,dataset_n30.json,1000,20,,,,
+sideways_move_run1,sideways_move,1,1,1511,4094,220,4.368779300013557,Hill-Climbing with Sideways Move,dataset_n30.json,1000,20,100,196,,
+sideways_move_run2,sideways_move,2,2,1653,4242,353,6.021315999998478,Hill-Climbing with Sideways Move,dataset_n30.json,1000,20,100,321,,
+sideways_move_run3,sideways_move,3,3,1797,4591,420,7.2839118000119925,Hill-Climbing with Sideways Move,dataset_n30.json,1000,20,100,386,,
+stochastic_run1,stochastic,1,1,1511,3212,1000,0.68505300002289,Stochastic Hill-Climbing,dataset_n30.json,1000,,,,,
+stochastic_run2,stochastic,2,2,1653,3339,1000,0.6084398000093643,Stochastic Hill-Climbing,dataset_n30.json,1000,,,,,
+stochastic_run3,stochastic,3,3,1797,3094,1000,0.5823112000070978,Stochastic Hill-Climbing,dataset_n30.json,1000,,,,,
+random_restart_run1,random_restart,1,1,1511,2428,44,0.28173380001680925,Random Restart Hill-Climbing,dataset_n30.json,,20,,,5,5
+random_restart_run2,random_restart,2,2,1653,3378,61,0.28810609999345616,Random Restart Hill-Climbing,dataset_n30.json,,20,,,5,5
+random_restart_run3,random_restart,3,3,1797,3047,44,0.21759780001593754,Random Restart Hill-Climbing,dataset_n30.json,,20,,,5,5
