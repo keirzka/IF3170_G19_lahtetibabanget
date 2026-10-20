@@ -21,6 +21,7 @@ Setiap state dapat berpindah ke neighbor melalui tiga jenis langkah yaitu menuka
 
 Spesifikasi bonus yang dikerjakan:
 
+- objective function utilitas dan value per berat;
 - seluruh varian Hill-Climbing (Steepest Ascent, Sideways Move, Stochastic, Random Restart);
 - multi-truk: program menerima lebih dari satu truk dan memaksimalkan total value yang diangkut seluruh armada.
 
