@@ -1,65 +1,45 @@
-# Pengujian dan eksperimen Genetic Algorithm. Jalankan `make` dari root repo.
-# Semua skrip Python dijalankan dari src/ karena io_handler membaca ./data/.
-#
-#   make dataset      buat dataset uji 10 dan 30 paket (seed tetap 2026)
-#   make test         pengujian otomatis GA (tanpa menulis file)
-#   make smoke        uji alur penuh dengan data kecil -> output/ga_smoke (jangan di-commit)
-#   make experiment   18 run GA pada 30 paket -> output/ga
-#   make viz          gambar state dan plot dari hasil eksperimen
-#
-# Variabel: PYTHON=python3 | RUN=nama_folder_output | ARGS="--elitism"
-#   contoh: make experiment RUN=ga_elitism ARGS=--elitism && make viz RUN=ga_elitism
-
 PYTHON ?= python
 SRC    := src
 OUT    := output
-RUN    ?= ga
-ARGS   ?=
+INPUT  ?= dataset_n30.json
+NAME   := $(basename $(notdir $(INPUT)))
 
 .DEFAULT_GOAL := help
-.PHONY: help deps dataset test smoke experiment viz clean-smoke
+.PHONY: help deps dataset hc sa ga viz compare all clean
 
 help:
-	@echo "make deps        pasang matplotlib"
-	@echo "make dataset     buat src/data/dataset_n10.json dan dataset_n30.json"
-	@echo "make test        pengujian otomatis GA"
-	@echo "make smoke       uji alur penuh (data kecil) -> $(OUT)/ga_smoke"
-	@echo "make experiment  18 run GA pada 30 paket -> $(OUT)/$(RUN)"
-	@echo "make viz         gambar dari $(OUT)/$(RUN) -> $(OUT)/viz_$(RUN)"
-	@echo "make clean-smoke hapus hasil smoke"
+	@echo "make deps                  pasang dependensi"
+	@echo "make hc  [INPUT=...]       eksperimen Hill-Climbing (4 varian x 3 run)"
+	@echo "make sa  [INPUT=...]       eksperimen Simulated Annealing (3 run)"
+	@echo "make ga  [INPUT=...]       eksperimen Genetic Algorithm (18 run)"
+	@echo "make viz                   gambar state dan plot untuk seluruh isi $(OUT)/"
+	@echo "make compare [INPUT=...]   grafik perbandingan HC, SA, dan GA"
+	@echo "make all [INPUT=...]       hc + sa + ga + viz + compare"
+	@echo "make clean                 hapus seluruh hasil eksperimen"
+	@echo "INPUT default: $(INPUT)"
 
 deps:
-	$(PYTHON) -m pip install matplotlib
+	$(PYTHON) -m pip install -r requirements.txt
 
 dataset:
-	cd $(SRC)/data && $(PYTHON) generate_dataset.py --n 10 --seed 2026
 	cd $(SRC)/data && $(PYTHON) generate_dataset.py --n 30 --seed 2026
 
-test:
-	cd $(SRC) && $(PYTHON) test_ga.py
+hc:
+	cd $(SRC) && $(PYTHON) experiment_hill_climbing.py $(INPUT)
 
-smoke:
-	cd $(SRC) && $(PYTHON) experiment_ga.py data/dataset_n10.json --out ../$(OUT)/ga_smoke
-	$(MAKE) viz RUN=ga_smoke
+sa:
+	cd $(SRC) && $(PYTHON) experiment_sa.py $(INPUT)
 
-experiment:
-	cd $(SRC) && $(PYTHON) experiment_ga.py data/dataset_n30.json --out ../$(OUT)/$(RUN) $(ARGS)
-
-define VIZ_PY
-import glob, os, sys
-import matplotlib
-matplotlib.use("Agg")
-import visualisasi as v
-src, dst = sys.argv[1], sys.argv[2]
-print(v.plot_experiment_summary(v.load_records(src), os.path.join(dst, "ringkasan_ga.png")))
-for f in sorted(glob.glob(os.path.join(src, "*_run*.json"))):
-    for p in v.visualize_run(f, dst):
-        print(p)
-endef
-export VIZ_PY
+ga:
+	cd $(SRC) && $(PYTHON) experiment_ga.py $(INPUT)
 
 viz:
-	cd $(SRC) && $(PYTHON) -c "$$VIZ_PY" ../$(OUT)/$(RUN) ../$(OUT)/viz_$(RUN)
+	cd $(SRC) && $(PYTHON) visualisasi.py
 
-clean-smoke:
-	rm -rf $(OUT)/ga_smoke $(OUT)/viz_ga_smoke
+compare:
+	cd $(SRC) && $(PYTHON) visualisasi.py --compare $(NAME)
+
+all: hc sa ga viz compare
+
+clean:
+	rm -rf $(OUT)/hc $(OUT)/sa $(OUT)/ga $(OUT)/perbandingan_*.png $(OUT)/initial_state_*.png
