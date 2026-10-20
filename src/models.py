@@ -2,104 +2,119 @@ from dataclasses import dataclass
 from typing import List, Optional, Tuple
 import copy
 
-# Sumbu Koordinat Package
 AXIS = ('x', 'y', 'z')
 
-# Swap untuk rotasi terhadap sumbu tertentu
 SWAP_AXIS = {'x': {'y': 'z', 'z': 'y'},
-            'y': {'x': 'z', 'z': 'x'},
-            'z': {'x': 'y', 'y': 'x'}}
+             'y': {'x': 'z', 'z': 'x'},
+             'z': {'x': 'y', 'y': 'x'}}
 
 @dataclass
-class Package :
-    id : str    # id paket
-    width : int 
-    length : int
-    height : int
-    value : int
-    weight : int
-    eta : int   # Estimate Time of Arrival
-    is_fragile : bool  # benda pecah belah 
+class Package:
+    id: str
+    width: int
+    length: int
+    height: int
+    value: int
+    weight: int
+    eta: int
+    is_fragile: bool
 
-    position : Optional[Tuple[int, int, int]] = None # posisi paket saat ini berdasarkan titik sudut kiri-bawah-belakang (None : di luar truk)
-    orientation : Tuple[str, str, str] = AXIS   # orientasi posisi paket terhadap ukuran posisinya pada w, l, h
+    position: Optional[Tuple[int, int, int]] = None
+    orientation: Tuple[str, str, str] = AXIS
+    truck_id: int = 0
 
-    @property 
-    def dimension(self) : # tuple ukuran paket sesuai dimensi pada sumbu x, y, z
+    @property
+    def dimension(self):
         sizes = (self.width, self.length, self.height)
-
         dx = sizes[self.orientation.index('x')]
         dy = sizes[self.orientation.index('y')]
         dz = sizes[self.orientation.index('z')]
-
         return dx, dy, dz
 
     @property
-    def volume(self) :
+    def volume(self):
         return self.length * self.width * self.height
 
     @property
     def is_placed(self):
-        return self.position != None
+        return self.position is not None
 
-    def rotate(self, axis : str): # 1 kali rotate adalah untuk 90 derajat terhadap sumbu axis
-       swap = SWAP_AXIS[axis.lower()]
-       self.orientation = tuple(swap.get(a, a) for a in self.orientation)
+    def rotate(self, axis: str):
+        swap = SWAP_AXIS[axis.lower()]
+        self.orientation = tuple(swap.get(a, a) for a in self.orientation)
 
-    def copy(self) : 
+    def copy(self):
         return copy.deepcopy(self)
-    
+
+
 @dataclass
-class Truck : 
-    width : int
-    length : int
-    height : int
-    max_capacity : int
-    
+class Truck:
+    width: int
+    length: int
+    height: int
+    max_capacity: int
+
     @property
-    def volume(self) :
+    def volume(self):
         return self.length * self.width * self.height
 
 @dataclass
-class State : 
-    truck : Truck
-    packages : List[Package] 
+class State:
+    trucks: List[Truck]
+    packages: List[Package]
+
+    @property
+    def truck(self):
+        return self.trucks[0]
+
+    @property
+    def placed_packages(self):
+        return [p for p in self.packages if p.is_placed]
+
+    def packages_in(self, truck_id: int):
+        return [p for p in self.packages if p.is_placed and p.truck_id == truck_id]
+
+    def weight_in(self, truck_id: int):
+        return sum(p.weight for p in self.packages_in(truck_id))
+
+    def value_in(self, truck_id: int):
+        return sum(p.value for p in self.packages_in(truck_id))
+
+    def remaining_weight_in(self, truck_id: int):
+        return self.trucks[truck_id].max_capacity - self.weight_in(truck_id)
 
     @property
     def total_value(self):
-        return sum(pack.value for pack in self.packages if pack.is_placed)
-    
+        return sum(p.value for p in self.placed_packages)
+
     @property
-    def current_weight(self): 
-        return sum(pack.weight for pack in self.packages if pack.is_placed)
+    def current_weight(self):
+        return sum(p.weight for p in self.placed_packages)
+
+    @property
+    def total_capacity(self):
+        return sum(t.max_capacity for t in self.trucks)
 
     @property
     def remaining_weight(self):
-        return self.truck.max_capacity - self.current_weight
+        return self.total_capacity - self.current_weight
 
     @property
     def current_volume(self):
-        return sum(pack.volume for pack in self.packages if pack.is_placed)
+        return sum(p.volume for p in self.placed_packages)
 
     @property
-    def space_utilization(self) :
-        if self.truck.volume == 0:
+    def total_volume(self):
+        return sum(t.volume for t in self.trucks)
+
+    @property
+    def space_utilization(self):
+        if self.total_volume == 0:
             return 0
-        return (self.current_volume / self.truck.volume) * 100
+        return self.current_volume / self.total_volume * 100
 
-    @property
-    def placed_packages(self) :
-        return [p for p in self.packages if p.is_placed]
-
-    def get_package_by_id(self, idPackage : str) : 
-        for pack in self.packages :
-            if(pack.id == idPackage) : return pack
+    def get_package_by_id(self, package_id: str):
+        for p in self.packages:
+            if p.id == package_id:
+                return p
         return None
-    
-    def place_package(self, idPackage : str, position : Tuple[int, int, int]) :
-        pack = self.get_package_by_id(idPackage)
-        if (pack) : pack.position = position
-
-    def unplace_package(self, idPackage : str) : 
-        pack = self.get_package_by_id(idPackage)
-        if (pack) : pack.position = None

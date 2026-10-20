@@ -1,24 +1,42 @@
+import dataclasses
 import json
-from models import Package, Truck, State
+import os
 
-# Loader + parser
-def load_data_from_json(file_path : str) : 
-    # Data input disimpan di dalam src/data
-    with open('./data/' + file_path, 'r') as file:
+from models import Package, State, Truck
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+
+PACKAGE_FIELDS = {f.name for f in dataclasses.fields(Package)}
+
+
+def resolve_input_path(file_path: str):
+    if os.path.isfile(file_path):
+        return file_path
+    return os.path.join(DATA_DIR, os.path.basename(file_path))
+
+
+def parse_trucks(data):
+    raw = data.get("Trucks", data.get("Truck"))
+    if raw is None:
+        raise ValueError("input harus memiliki key 'Truck' atau 'Trucks'")
+    if isinstance(raw, dict):
+        raw = [raw]
+    if not raw:
+        raise ValueError("minimal harus ada satu truk")
+    return [Truck(**t) for t in raw]
+
+
+def load_data_from_json(file_path: str):
+    with open(resolve_input_path(file_path), "r") as file:
         data = json.load(file)
-
-    truck = Truck(**data["Truck"])
+    trucks = parse_trucks(data)
     packages = [Package(**p) for p in data["Package"]]
+    return State(trucks, packages)
 
-    state = State(truck=truck, packages=packages)
 
-    return state
-
-def state_to_json(state):
-    t = state.truck
+def state_to_json(state: State):
     return {
-        "truck": {"width": t.width, "length": t.length, "height": t.height,
-                  "max_capacity": t.max_capacity},
+        "trucks": [dataclasses.asdict(t) for t in state.trucks],
         "value": state.total_value,
         "weight": state.current_weight,
         "packages": [
@@ -28,19 +46,22 @@ def state_to_json(state):
                 "is_fragile": p.is_fragile,
                 "position": list(p.position) if p.position is not None else None,
                 "orientation": list(p.orientation),
+                "truck_id": p.truck_id,
             }
             for p in state.packages
         ],
     }
 
+
 def state_from_json(data):
-    truck = Truck(**data["truck"])
+    raw = data.get("trucks", data.get("truck"))
+    if isinstance(raw, dict):
+        raw = [raw]
+    trucks = [Truck(**t) for t in raw]
     packages = []
     for d in data["packages"]:
-        d = dict(d)
-        pos = d.pop("position")
-        ori = d.pop("orientation")
-        packages.append(Package(**d,
-                                position=tuple(pos) if pos is not None else None,
-                                orientation=tuple(ori)))
-    return State(truck, packages)
+        kwargs = {k: v for k, v in d.items() if k in PACKAGE_FIELDS}
+        kwargs["position"] = tuple(d["position"]) if d.get("position") is not None else None
+        kwargs["orientation"] = tuple(d.get("orientation", ("x", "y", "z")))
+        packages.append(Package(**kwargs))
+    return State(trucks, packages)

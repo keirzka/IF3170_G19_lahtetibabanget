@@ -1,58 +1,48 @@
-from models import State, Truck, Package, AXIS
-from validator import is_valid
-from neighbor import drop_z
-from typing import List
 import random
+from typing import List, Union
+from models import AXIS, Package, State, Truck
+from neighbor import drop_z
+from validator import is_valid
 
-def generate(truck : Truck, packages : List[Package], limit : int = 100) : 
-    for _ in range(limit) :
+def _as_trucks(trucks: Union[Truck, List[Truck]]):
+    return [trucks] if isinstance(trucks, Truck) else list(trucks)
+
+def generate(trucks: Union[Truck, List[Truck]], packages: List[Package], limit: int = 100):
+    trucks = _as_trucks(trucks)
+    for _ in range(limit):
         packages_copy = [p.copy() for p in packages]
 
-        for i, p in enumerate(packages_copy) : 
-            # Random paket yg masuk dan di luar
-            package_inside = random.choice([True, False])
+        for i, p in enumerate(packages_copy):
+            p.position = None
+            p.truck_id = 0
 
-            if(package_inside) : 
-                # Rotasi paket secara random sejauh kelipatan 90 derajat
-                num_rotation = random.randint(0,3)
+            if not random.choice([True, False]):
+                continue
 
-                for j in range(num_rotation) : 
-                    p.rotate(random.choice(AXIS))
+            for _ in range(random.randint(0, 3)):
+                p.rotate(random.choice(AXIS))
 
-                w, l, h = p.dimension
+            truck_id = 0 if len(trucks) == 1 else random.randrange(len(trucks))
+            truck = trucks[truck_id]
+            w, l, h = p.dimension
 
-                if(w <= truck.width and l <= truck.length and h <= truck.height) : # Ukuran paket yang masih muat di truk dimasukkan ke truk
+            if w > truck.width or l > truck.length or h > truck.height:
+                continue
 
-                    # Posisikan paket secara random
-                    max_x = truck.width - w
-                    max_y = truck.length - l
-                    
-                    x = random.randint(0, max_x)
-                    y = random.randint(0, max_y)
-                    z = drop_z(State(truck, packages_copy), i, x, y, w, l)
+            x = random.randint(0, truck.width - w)
+            y = random.randint(0, truck.length - l)
+            z = drop_z(State(trucks, packages_copy), i, truck_id, x, y, w, l)
 
-                    # Pastikan tidak melebihi tinggi truk
-                    if(z + h <= truck.height) :
-                        p.position = (x, y, z)
+            if z + h <= truck.height:
+                p.position = (x, y, z)
+                p.truck_id = truck_id
 
-                    else : 
-                        p.position = None
+        state = State(trucks, packages_copy)
+        if is_valid(state):
+            return state
 
-                else : # Ukuran paket sudah tidak muat, ditaro di luar
-                    p.position = None
-
-
-        # Buat objek state
-        state = State(truck, packages_copy)
-
-        # Pastikan penempatan paket valid
-        if (is_valid(state)) :  return state
-
-
-    # Tidak ada paket yang berhasil dimasukkan ke truck
     packages_outside = [p.copy() for p in packages]
-
-    for p in packages_outside : 
+    for p in packages_outside:
         p.position = None
-
-    return State(truck, packages_outside)
+        p.truck_id = 0
+    return State(trucks, packages_outside)

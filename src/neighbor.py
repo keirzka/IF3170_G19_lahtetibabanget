@@ -7,15 +7,20 @@ from validator import is_valid
 MOVE_NAMES = ("swap", "move", "rotate")
 
 def _clone(state):
-    return State(state.truck, [copy.copy(p) for p in state.packages])
+    return State(state.trucks, [copy.copy(p) for p in state.packages])
 
 def _xy_overlap(ax, ay, aw, al, bx, by, bw, bl):
     return ax < bx + bw and bx < ax + aw and ay < by + bl and by < ay + al
 
-def drop_z(state, idx, x, y, dx, dy):
+def _pick_truck(state, rng):
+    if len(state.trucks) == 1:
+        return 0
+    return rng.randrange(len(state.trucks))
+
+def drop_z(state, idx, truck_id, x, y, dx, dy):
     z = 0
     for j, other in enumerate(state.packages):
-        if j == idx or not other.is_placed:
+        if j == idx or not other.is_placed or other.truck_id != truck_id:
             continue
         ox, oy, oz = other.position
         ow, ol, oh = other.dimension
@@ -35,21 +40,24 @@ def move_swap(state, rng=random):
     new_state = _clone(state)
     a, b = new_state.packages[i], new_state.packages[j]
     a.position, b.position = b.position, a.position
+    a.truck_id, b.truck_id = b.truck_id, a.truck_id
     return new_state
 
 def move_relocate(state, rng=random):
     packages = state.packages
     if not packages:
         return None
-    truck = state.truck
+
     i = rng.randrange(len(packages))
     pkg = packages[i]
     dx, dy, dz = pkg.dimension
     variants = ("take_out", "shift", "relocate") if pkg.is_placed else ("relocate",)
     variant = rng.choice(variants)
+    truck_id = pkg.truck_id
     if variant == "take_out":
         new_pos = None
     elif variant == "shift":
+        truck = state.trucks[truck_id]
         x, y, _ = pkg.position
         delta = rng.choice((-1, 1))
         if rng.choice(("x", "y")) == "x":
@@ -58,19 +66,22 @@ def move_relocate(state, rng=random):
             y += delta
         if x < 0 or y < 0 or x + dx > truck.width or y + dy > truck.length:
             return None
-        new_pos = (x, y, drop_z(state, i, x, y, dx, dy))
+        new_pos = (x, y, drop_z(state, i, truck_id, x, y, dx, dy))
     else:
+        truck_id = _pick_truck(state, rng)
+        truck = state.trucks[truck_id]
         if dx > truck.width or dy > truck.length:
             return None
         x = rng.randint(0, truck.width - dx)
         y = rng.randint(0, truck.length - dy)
-        new_pos = (x, y, drop_z(state, i, x, y, dx, dy))
-    if new_pos is not None and new_pos[2] + dz > truck.height:
+        new_pos = (x, y, drop_z(state, i, truck_id, x, y, dx, dy))
+    if new_pos is not None and new_pos[2] + dz > state.trucks[truck_id].height:
         return None
-    if new_pos == pkg.position:
+    if new_pos == pkg.position and truck_id == pkg.truck_id:
         return None
     new_state = _clone(state)
     new_state.packages[i].position = new_pos
+    new_state.packages[i].truck_id = truck_id
     return new_state
 
 def move_rotate(state, rng=random, axis=None):
@@ -84,12 +95,12 @@ def move_rotate(state, rng=random, axis=None):
     if rotated.dimension == pkg.dimension:
         return None
     if pkg.is_placed:
-        truck = state.truck
+        truck = state.trucks[pkg.truck_id]
         x, y, _ = pkg.position
         dx, dy, dz = rotated.dimension
         if x + dx > truck.width or y + dy > truck.length:
             return None
-        z = drop_z(state, i, x, y, dx, dy)
+        z = drop_z(state, i, pkg.truck_id, x, y, dx, dy)
         if z + dz > truck.height:
             return None
         rotated.position = (x, y, z)
